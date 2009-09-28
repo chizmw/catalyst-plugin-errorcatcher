@@ -1,0 +1,40 @@
+This file documents the revision history for Catalyst::Plugin::ErrorCatcher
+
+0.0.7
+    - added "suppress_under_test_harness" option
+
+0.0.6   Mon Jun  1 18:47:08 BST 2009
+    - make sure we do nothing if "enabled" is explicitly set to 0
+    - add some extra output if we have a non-zero "verbose" value
+    - added ::File emitter
+
+0.0.5   Tue May 26 18:55:03 BST 2009
+    - "cleanup" DBIx::Class::Schema::txn_do() format messages
+    - add hostname to default email subject line
+
+0.0.4   Thu May 21 08:58:22 BST 2009
+    - remove UNIVERSAL::can module usage
+      (still calling can() 'correctly')
+    - added "always_log" config option
+    - added missing build dependency
+
+0.0.3   Mon May 11 21:18:55 BST 2009
+    - fix plugin setup() to work properly
+    - added tests
+
+0.0.2.2 Mon May 11 14:05:11 BST 2009
+    - specified minimum version of Catalyst::Runtime
+      (for ctx_request() test method)
+
+0.0.2.1 Sat May  9 19:31:11 BST 2009
+    - added missing build dependencies
+    - added version number to Email emitter
+
+0.0.2   Fri May  8 21:22:09 BST 2009
+    - added Email emitter
+    - store config options in an accessor
+    - specify version of inc::Module::Install
+    - added some basic tests
+
+0.0.1   Thu May  7 23:13:09 BST 2009
+    - Initial module release

@@ -1,0 +1,55 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.55.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 5d3742078fbe686c1577718dbfd03681166a502a Changes
+SHA1 a8e4fcbbec2099c318c84589ddec51c4d516b9cf LICENSE
+SHA1 e0ab23d1c96b2408b6950e960a6931b1c042fa78 MANIFEST
+SHA1 8d5cf3521ca7eee220761d5eaf30176410ad26a5 MANIFEST.SKIP
+SHA1 f39a889d5429583a1f46362cf42a1935d27c994f META.yml
+SHA1 52e338e6deb97e98d63caee6f9de721cad13d6b7 Makefile.PL
+SHA1 a3de728183a157fd98fd0ae4a3e6ae7dcd1ba5d5 README
+SHA1 55fdc5de327bb7ce228bc387e564653249480617 inc/Module/AutoInstall.pm
+SHA1 037d8c07d6c40b3003338eef49330f0c7cd23bb8 inc/Module/Install.pm
+SHA1 463d2431629de27feeb9348614b4c62dd372a717 inc/Module/Install/AutoInstall.pm
+SHA1 e390e7917698c3eecdec869b93af73c74ec5a943 inc/Module/Install/Base.pm
+SHA1 09e397d4fd466244f57bfbfdede57a4394b6d482 inc/Module/Install/Can.pm
+SHA1 25410c586b2f120bf3f5660490255aed7d74150a inc/Module/Install/Fetch.pm
+SHA1 f4f761f89426386ae7177ce447f953bc7b785ab3 inc/Module/Install/Include.pm
+SHA1 8dd36177a9e65fcfcbd965906c7d6df5bfd6ffe2 inc/Module/Install/Makefile.pm
+SHA1 90be06fa21f36008ea475ebb1231afe175a531d9 inc/Module/Install/Metadata.pm
+SHA1 2c3bb1776e106024bb4f7e894a65f576238a0677 inc/Module/Install/Win32.pm
+SHA1 32c2a643e43c0ec5fa948050566aa705751c1dfb inc/Module/Install/WriteAll.pm
+SHA1 f87c05fe131b424e68f0a38a8a8f2c547ddaa251 lib/Catalyst/Plugin/ErrorCatcher.pm
+SHA1 a6f8bd2739f843bec8d143c661ea1e230be64dcd lib/Catalyst/Plugin/ErrorCatcher/Email.pm
+SHA1 72f0f165e8d3cda6055152a4876d4e1a598a8692 lib/Catalyst/Plugin/ErrorCatcher/File.pm
+SHA1 26425978dac25cdee265b48081e2a89e25cd4a35 t/00.basic.t
+SHA1 c3ae4b51a81956912e36bca143478c36c85d84e0 t/01.no.tabs.t
+SHA1 3e3cb58b134be9f2353586141c558a2db77f30f8 t/03.config.t
+SHA1 e7f8dc92dde7d42dd4bfbaad55f7530f5e0dcf57 t/04.trace.t
+SHA1 63d2245788b75211e74f14182950367d603ce658 t/05.emit.email.t
+SHA1 b9c99c4ef0eac37e9ea49014fbe7fe8001af47cd t/06.emit.file.t
+SHA1 64c1d2fe3d6a971e9d197fbf0064050d1af63763 t/lib/TestApp.pm
+SHA1 51b2c0037e3ff2ae4d377ed5ecd0eed5b7511961 t/lib/TestApp/Controller/Foo.pm
+SHA1 b721eca494a868418e5a8edec45823fd5834a554 t/lib/TestApp/Exception.pm
+SHA1 a026a49946baacdc21951509125f7802d86cabd0 t/lib/testapp-file.conf
+SHA1 bf4c1c102f14922f9cf09994fcd63a4f1be3546d t/lib/testapp.conf
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEARECAAYFAkokFOEACgkQh4j7xTiFuxHV3gCbB6QtiGf3+X9SYIlT/U588SCb
+Ei8An20TN2e1vOfHRWQjqnZ4QsCJAk0W
+=p13L
+-----END PGP SIGNATURE-----

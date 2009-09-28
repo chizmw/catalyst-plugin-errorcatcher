@@ -1,0 +1,110 @@
+NAME
+    Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them
+    somewhere
+
+SYNOPSIS
+      use Catalyst qw/-Debug StackTrace ErrorCatcher/;
+
+DESCRIPTION
+    This plugin allows you to do More Stuff with the information that would
+    normally only be seen on the Catalyst Error Screen courtesy of the
+    Catalyst::Plugin::StackTrace plugin.
+
+CONFIGURATION
+    The plugin is configured in a similar manner to other Catalyst plugins:
+
+      <Plugin::ErrorCatcher>
+        enabled     1
+        context     5
+
+        emit_module A::Module
+      </Plugin::ErrorCatcher>
+
+    enabled
+        Setting this to *true* forces the module to work its voodoo.
+
+        It's also enabled if the value is unset and you're running Catalyst
+        in debug-mode.
+
+    context
+        When there is stack-trace information to share, how many lines of
+        context to show around the line that caused the error.
+
+    emit_module
+        This specifies which module to use for custom output behaviour.
+
+        You can chain multiple modules by specifying a line in the config
+        for each module you'd like used:
+
+            emit_module A::Module
+            emit_module Another::Module
+            emit_module Yet::Another::Module
+
+        If none are specified, or all that are specified fail, the default
+        behaviour is to log the prepared message at the INFO level via
+        "$c->log()".
+
+        For details on how to implement a custom emitter see "CUSTOM EMIT
+        CLASSES" in this documentation.
+
+CUSTOM EMIT CLASSES
+    A custom emit class takes the following format:
+
+      package A::Module;
+      # vim: ts=8 sts=4 et sw=4 sr sta
+      use strict;
+      use warnings;
+      
+  sub emit {
+        my ($class, $c, $output) = @_;
+      
+    $c->log->info(
+          'IGNORING OUTPUT FROM Catalyst::Plugin::ErrorCatcher'
+        );
+      
+    return;
+      }
+      
+  1;
+      __END__
+
+    The only requirement is that you have a sub called "emit".
+
+    "Catalyst::Plugin::ErrorCatcher" passes the following parameters in the
+    call to "emit()":
+
+    $class
+        The package name
+
+    $c  A Context object
+
+    $output
+        The processed output from "Catalyst::Plugin::ErrorCatcher"
+
+    If you want to use the original error message you should use:
+
+      my @error = @{ $c->error };
+
+    You may use and abuse any Catalyst methods, or other Perl modules as you
+    see fit.
+
+KNOWN ISSUES
+    This module has no tests!
+
+SEE ALSO
+    Catalyst, Catalyst::Plugin::StackTrace
+
+AUTHORS
+    Chisel Wright "<chisel@herlpacker.co.uk>"
+
+THANKS
+    The authors of Catalyst::Plugin::StackTrace, from which a lot of code
+    was used.
+
+    Ash Berlin for guiding me in the right direction after a known hacky
+    first implementation.
+
+COPYRIGHT
+    This program is free software, you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
