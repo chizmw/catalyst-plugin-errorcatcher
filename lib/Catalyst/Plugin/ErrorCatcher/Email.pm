@@ -189,7 +189,7 @@ Available tags are:
   %F   filename where error occurred, leading directories trimmed
   %h   server hostname
   %l   line number where error occurred
-  %N   application name
+  %n   application name
   %p   package where error occurred
   %V   application version
 
