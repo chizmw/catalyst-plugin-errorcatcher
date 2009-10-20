@@ -13,3 +13,4 @@ tmp$
 ^pm_to_blib
 \.bak$
 .*\.sqlite3
+.git
