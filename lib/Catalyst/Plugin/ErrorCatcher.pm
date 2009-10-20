@@ -7,12 +7,13 @@ use base qw/Class::Data::Accessor/;
 use IO::File;
 use MRO::Compat;
 
-use version; our $VERSION = qv(0.0.7)->numify;
+use version; our $VERSION = qv(0.0.6.4)->numify;
 
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_cfg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_c_cfg/);
+__PACKAGE__->mk_classaccessor(qw/_errorcatcher_first_frame/);
 
 sub setup {
     my $c = shift @_;
@@ -46,17 +47,6 @@ sub finalize_error {
     # this should let ::StackTrace do some of our heavy-lifting
     # and prepare the Devel::StackTrace frames for us to re-use
     $c->maybe::next::method(@_);
-
-    # if we're running under Test::Harness and we've been asked to be silent
-    # in tests:
-    if (
-        # the config file insists we DO NOT run under tests
-           defined $conf->{suppress_under_test_harness}
-        && $conf->{suppress_under_test_harness}
-        && defined $ENV{HARNESS_ACTIVE}
-    ) {
-        return;
-    }
 
     # don't run if user is certain we shouldn't
     if (
@@ -242,16 +232,40 @@ sub _prepare_message {
     $feedback .= qq{Exception caught:\n};
 
     # the (parsed) error
-    $feedback .= "\n  Error: " . $parsed_error . "\n";
+    $feedback .= "\n   Error: " . $parsed_error . "\n";
 
     # general request information
-    $feedback .= "   Time: " . scalar(localtime) . "\n";
-    $feedback .= " Client: " . $c->request->address;
-    $feedback .=        " (" . $c->request->hostname . ")\n";
-    $feedback .= "  Agent: " . ($c->request->user_agent||q{}) . "\n";
-    $feedback .= "    URI: " . $c->request->uri . "\n";
-    $feedback .= " Method: " . $c->request->method . "\n";
+    # some of these aren't always defined...
+    $feedback .= "    Time: " . scalar(localtime) . "\n";
 
+    $feedback .= "  Client: " . $c->request->address
+        if (defined $c->request->address);
+    if (defined $c->request->hostname) {
+        $feedback .=        " (" . $c->request->hostname . ")\n"
+    }
+    else {
+        $feedback .= "\n";
+    }
+
+    if (defined $c->request->user_agent) {
+        $feedback .= "   Agent: " . $c->request->user_agent . "\n";
+    }
+    $feedback .= "     URI: " . ($c->request->uri||q{n/a}) . "\n";
+    $feedback .= "  Method: " . ($c->request->method||q{n/a}) . "\n";
+
+    # if we have a logged-in user, add to the feedback
+    if (
+           $c->user_exists
+        && $c->user->can('id')
+    ) {
+        $feedback .= "    User: " . $c->user->id;
+        if (ref $c->user) {
+            $feedback .= " (" . ref($c->user) . ")\n";
+        }
+        else {
+            $feedback .= "\n";
+        }
+    }
 
     if ('ARRAY' eq ref($c->_errorcatcher)) {
         # push on information and context
@@ -260,6 +274,12 @@ sub _prepare_message {
             # .../MyApp/script/../lib/...
             if ( $frame->{file} =~ /../ ) {
                 $frame->{file} =~ s{script/../}{};
+            }
+
+            # if we haven't stored a frame, do so now
+            # this is useful for easy access to the filename, line, etc
+            if (not defined $c->_errorcatcher_first_frame) {
+                $c->_errorcatcher_first_frame($frame);
             }
 
             my $pkg  = $frame->{pkg};
@@ -368,7 +388,7 @@ L<Catalyst::Plugin::StackTrace> plugin.
 The plugin is configured in a similar manner to other Catalyst plugins:
 
   <Plugin::ErrorCatcher>
-    enabled     1
+    enable      1
     context     5
     always_log  0
 
@@ -377,7 +397,7 @@ The plugin is configured in a similar manner to other Catalyst plugins:
 
 =over 4
 
-=item B<enabled>
+=item B<enable>
 
 Setting this to I<true> forces the module to work its voodoo.
 
@@ -413,22 +433,6 @@ suppress the I<info> log message if one or more of them succeeded.
 
 If you wish to log the information, via C<$c-E<gt>log()> then set this value
 to 1.
-
-    # always emit the information via $c->log
-    always_log      1
-
-=item B<suppress_under_test_harness>
-
-You may only be interested in errors that occur in deployed instances of the
-application, and not in any that are caught when running your test suite; for
-example you may not e interested in multiple emails from an automated build
-system.
-
-If you wish to suppress emits under C<make test> and C<prove> set this value
-to 1.
-
-    # don't enit anything during testing
-    suppress_under_test_harness     1
 
 =back
 
@@ -520,7 +524,7 @@ fit.
 
 =head1 KNOWN ISSUES
 
-There are no known issues.
+The test-suite coverage is quite low.
 
 =head1 SEE ALSO
 

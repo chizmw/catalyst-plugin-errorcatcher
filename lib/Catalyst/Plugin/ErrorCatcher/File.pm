@@ -3,7 +3,7 @@ package Catalyst::Plugin::ErrorCatcher::File;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv(0.0.1)->numify;
+use version; our $VERSION = qv(0.0.1.1)->numify;
 
 use DateTime;
 use Path::Class;
@@ -79,7 +79,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Plugin::ErrorCatcher::File - an email emitter for Catalyst::Plugin::ErrorCatcher
+Catalyst::Plugin::ErrorCatcher::File - a file emitter for Catalyst::Plugin::ErrorCatcher
 
 =head1 SYNOPSIS
 

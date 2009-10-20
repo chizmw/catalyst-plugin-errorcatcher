@@ -36,4 +36,17 @@ sub crash_obj : Local {
     die TestApp::Exception->new;
 }
 
+sub crash_user : Local {
+    my ( $self, $c ) = @_;
+
+    $c->authenticate(
+        {
+            username => 'buffy',
+            password => 'stake'
+        }
+    );
+
+    die 'Vampire';
+}
+
 1;

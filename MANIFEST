@@ -24,8 +24,10 @@ t/00.basic.t
 t/01.no.tabs.t
 t/03.config.t
 t/04.trace.t
+t/05.emit.email.cc.t
 t/05.emit.email.t
 t/06.emit.file.t
+t/lib/testapp-cc.conf
 t/lib/testapp-file.conf
 t/lib/testapp.conf
 t/lib/TestApp.pm

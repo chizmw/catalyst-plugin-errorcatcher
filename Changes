@@ -1,9 +1,21 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
-0.0.7
-    - added "suppress_under_test_harness" option
+0.0.6.4 Mon Sep 28 10:02:32 BST 2009
+    - extend ::Email emitter to allow tag placeholders in subject line
 
-0.0.6   Mon Jun  1 18:47:08 BST 2009
+0.0.6.3 Fri Sep 11 11:21:03 BST 2009
+    - POD fix (enabled --> enable)
+    - RT#49550: POD fix (copy-and-paste whoopsie)
+    - RT#49552: ->user added to report (if exists)
+    - RT#49590: ->request only added if exists (for ::Stomp)
+
+0.0.6.2 Wed Jul 22 19:17:15 BST 2009
+    - add Cc: option to email emitter
+
+0.0.6.1 Mon Jun 29 14:15:08 BST 2009
+    - fix hostname in email emitter subject line
+
+0.0.6
     - make sure we do nothing if "enabled" is explicitly set to 0
     - add some extra output if we have a non-zero "verbose" value
     - added ::File emitter
