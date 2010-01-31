@@ -255,7 +255,8 @@ sub _prepare_message {
 
     # if we have a logged-in user, add to the feedback
     if (
-           $c->user_exists
+           $c->can('user_exists')
+        && $c->user_exists
         && $c->user->can('id')
     ) {
         $feedback .= "    User: " . $c->user->id;

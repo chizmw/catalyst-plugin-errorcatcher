@@ -1,5 +1,9 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
+0.0.6.5	Sun Jan 31 17:13:22 GMT 2010
+    - RT#54071: fails if C:P:Authentication is not loaded
+      apply patch and add NoAuth based tests under t/bug/
+
 0.0.6.4 Mon Sep 28 10:02:32 BST 2009
     - extend ::Email emitter to allow tag placeholders in subject line
 
