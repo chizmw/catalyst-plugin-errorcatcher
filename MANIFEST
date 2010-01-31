@@ -27,6 +27,11 @@ t/04.trace.t
 t/05.emit.email.cc.t
 t/05.emit.email.t
 t/06.emit.file.t
+t/bug/RT54071.t
+t/lib/noauth.conf
+t/lib/NoAuth.pm
+t/lib/NoAuth/Controller/Foo.pm
+t/lib/NoAuth/Exception.pm
 t/lib/testapp-cc.conf
 t/lib/testapp-file.conf
 t/lib/testapp.conf

@@ -14,9 +14,9 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 f675f7a30b9806e76da9ce1e840c1f1cdb8a77d8 Changes
+SHA1 c484e3d67d03f8225d2142606396861c2fc9d2e6 Changes
 SHA1 a8e4fcbbec2099c318c84589ddec51c4d516b9cf LICENSE
-SHA1 3e79a12cfa77a142ab0745a40ac93161dc038264 MANIFEST
+SHA1 f55e593c96e175cd3bc2235f18e40e414b5812ae MANIFEST
 SHA1 24a5a60c1c311b8915392fc17bc4e4ca4bbe10e4 MANIFEST.SKIP
 SHA1 f8901a8a118b855dda145c720da4ce0c1be25cbf META.yml
 SHA1 e1557bc8411133d74d95732488d308c5678c86d0 Makefile.PL
@@ -32,8 +32,8 @@ SHA1 3e83972921d54198d1246f7278f08664006cd65d inc/Module/Install/Makefile.pm
 SHA1 12bf1867955480d47d5171a9e9c6a96fabe0b58f inc/Module/Install/Metadata.pm
 SHA1 f7ee667e878bd2faf22ee9358a7b5a2cc8e91ba4 inc/Module/Install/Win32.pm
 SHA1 8ed29d6cf217e0977469575d788599cbfb53a5ca inc/Module/Install/WriteAll.pm
-SHA1 425f0e6553ed194228baa7e83625134a99f5caa0 lib/Catalyst/Plugin/ErrorCatcher.pm
-SHA1 a5e5ff18631631950976bbd12f2cbbe7e5a5c7ab lib/Catalyst/Plugin/ErrorCatcher/Email.pm
+SHA1 6685d4d376c31133729c0cbfa7841e5468cc6665 lib/Catalyst/Plugin/ErrorCatcher.pm
+SHA1 85dfc593446cb90e1a3f3a2c14fdf57ae468a981 lib/Catalyst/Plugin/ErrorCatcher/Email.pm
 SHA1 bad82dee97a1cc7061d612bc2036ec8198d7d45c lib/Catalyst/Plugin/ErrorCatcher/File.pm
 SHA1 26425978dac25cdee265b48081e2a89e25cd4a35 t/00.basic.t
 SHA1 c3ae4b51a81956912e36bca143478c36c85d84e0 t/01.no.tabs.t
@@ -42,16 +42,21 @@ SHA1 bbed242b51014c13424f0bf6a07b574a9d23ca56 t/04.trace.t
 SHA1 a28b537cc63dfb45d823f50e4f97d2bf071fe203 t/05.emit.email.cc.t
 SHA1 6625ed8c3599228aef5519e52fb8fa7ff2c0aaac t/05.emit.email.t
 SHA1 b9c99c4ef0eac37e9ea49014fbe7fe8001af47cd t/06.emit.file.t
+SHA1 76d5cc23452b66b28c5d9e7528a6a2239c8ab676 t/bug/RT54071.t
+SHA1 ef66b9772b330f309760def31c2d3c6a36a11a70 t/lib/NoAuth.pm
+SHA1 f22c906ca72a38331feedf252d3dbb3e37b603e3 t/lib/NoAuth/Controller/Foo.pm
+SHA1 da0bf0f7aeaea19f8ce683f3cba5152cc6773111 t/lib/NoAuth/Exception.pm
 SHA1 4b5413e91075c1f789ec8407cc7851f6a7e34ffe t/lib/TestApp.pm
 SHA1 49d420cb969d9c3d1aa5325f35b53ed80f5e0583 t/lib/TestApp/Controller/Foo.pm
 SHA1 b721eca494a868418e5a8edec45823fd5834a554 t/lib/TestApp/Exception.pm
+SHA1 bf4c1c102f14922f9cf09994fcd63a4f1be3546d t/lib/noauth.conf
 SHA1 72f5e46458ad8d84cf0f9f15aa981f00da6d1276 t/lib/testapp-cc.conf
 SHA1 a026a49946baacdc21951509125f7802d86cabd0 t/lib/testapp-file.conf
 SHA1 bf4c1c102f14922f9cf09994fcd63a4f1be3546d t/lib/testapp.conf
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iEYEARECAAYFAkreM4AACgkQh4j7xTiFuxGx4ACghwanq72V1P+OSAZHbrrS5l8a
-pZ4AoI5tjv9uSZTYPAzY53muNFL24oth
-=Q/Gf
+iEYEARECAAYFAktlvC8ACgkQh4j7xTiFuxFcFACeMsABUh5MV+5AnBO6ehqAFeJ5
+kwUAoLk0dXEA8h2Ye06tsRrZFud2at+f
+=GixV
 -----END PGP SIGNATURE-----
