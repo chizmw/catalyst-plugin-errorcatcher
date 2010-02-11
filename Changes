@@ -1,5 +1,9 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
+0.0.6.6
+    - call new() on requested emitters, if the method exists
+    - store object from new() and use in the emit phase
+
 0.0.6.5	Sun Jan 31 17:13:22 GMT 2010
     - RT#54071: fails if C:P:Authentication is not loaded
       apply patch and add NoAuth based tests under t/bug/

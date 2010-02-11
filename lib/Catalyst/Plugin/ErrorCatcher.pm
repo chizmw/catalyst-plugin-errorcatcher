@@ -7,13 +7,14 @@ use base qw/Class::Data::Accessor/;
 use IO::File;
 use MRO::Compat;
 
-use version; our $VERSION = qv(0.0.6.5)->numify;
+use version; our $VERSION = qv(0.0.6.6)->numify;
 
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_cfg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_c_cfg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_first_frame/);
+__PACKAGE__->mk_classaccessor(qw/_errorcatcher_emitter_of/);
 
 sub setup {
     my $c = shift @_;
@@ -31,9 +32,17 @@ sub setup {
     $config->{context}      ||= 4;
     $config->{verbose}      ||= 0;
     $config->{always_log}   ||= 0;
+    
+    # start with an empty hash
+    $c->_errorcatcher_emitter_of({});
 
     # store our plugin config
     $c->_errorcatcher_cfg( $config );
+
+    # some annoying emitters want a new() to be called
+    $c->emitters_init;
+
+    return 1;
 }
 
 # implementation borrowed from ABERLIN
@@ -78,6 +87,66 @@ sub my_finalize_error {
     return;
 }
 
+sub emitters_init {
+    my $c = shift;
+
+    if (defined (my $emit_list = $c->_errorcatcher_cfg->{emit_module})) {
+        my @emit_list;
+        # one item or a list?
+        if (defined ref($emit_list) and 'ARRAY' eq ref($emit_list)) {
+            @emit_list = @{ $emit_list };
+        }
+        elsif (not ref($emit_list)) {
+            @emit_list = ( $emit_list );
+        }
+
+        foreach my $emitter (@emit_list) {
+            $c->_require_and_new($emitter);
+        }
+    }
+}
+
+sub _require_and_new {
+    my $c = shift;
+    my $emitter_name = shift;
+    my $output = shift;
+    my $conf = $c->_errorcatcher_cfg;
+
+    # make sure our emitter loads
+    eval "require $emitter_name";
+    if ($@) {
+        $c->log->error($@);
+        return;
+    }
+    # make sure it "can" new()
+    if ($emitter_name->can('new')) {
+        my ($e, $e_cfg);
+        $e_cfg = $c->config->{$emitter_name} || {}; 
+
+        eval {
+            $e = $emitter_name->new(
+                $c, $output
+            );
+        };
+        if ($@) {
+            $c->log->error($@);
+            return;
+        }
+        # store the object
+        $c->_errorcatcher_emitter_of->{$emitter_name} = $e;
+
+        $c->log->debug(
+                $emitter_name
+            . q{: initialised without errors}
+        ) if $conf->{verbose} > 1;
+
+        # we are happy when they emitted without incident
+        return 1;
+    }
+
+    # default is, "no we didn't mit anything"
+    return;
+}
 sub _emit_message {
     my $c = shift;
     my $conf = $c->_errorcatcher_cfg;
@@ -142,17 +211,37 @@ sub _require_and_emit {
     my $emitter_name = shift;
     my $output = shift;
     my $conf = $c->_errorcatcher_cfg;
+    my $emitter;
 
-    # make sure our emitter loads
-    eval "require $emitter_name";
-    if ($@) {
-        $c->log->error($@);
-        return;
+    # if we've preloaded an emitter [because it nas new()]
+    # call that object
+    if (defined (my $e=$c->_errorcatcher_emitter_of->{$emitter_name})) {
+        # make sure it's "the right thing"
+        if ($emitter_name eq ref($e)) {
+            $emitter = $e;
+        }
+        else {
+            die "$emitter isn't a $emitter";
+        }
     }
+
+    # if we haven't set the emitter (from a preloaded object)
+    # require it ...
+    if (not defined $emitter) {
+        # make sure our emitter loads
+        eval "require $emitter_name";
+        if ($@) {
+            $c->log->error($@);
+            return;
+        }
+
+        $emitter = $emitter_name;
+    }
+
     # make sure it "can" emit
-    if ($emitter_name->can('emit')) {
+    if ($emitter->can('emit')) {
         eval {
-            $emitter_name->emit(
+            $emitter->emit(
                 $c, $output
             );
         };
