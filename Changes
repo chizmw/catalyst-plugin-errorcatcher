@@ -1,6 +1,6 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
-0.0.6.6
+0.0.7   Fri Feb 12 16:14:48 GMT 2010
     - call new() on requested emitters, if the method exists
     - store object from new() and use in the emit phase
 

@@ -7,7 +7,7 @@ use base qw/Class::Data::Accessor/;
 use IO::File;
 use MRO::Compat;
 
-use version; our $VERSION = qv(0.0.6.6)->numify;
+use version; our $VERSION = qv(0.0.7)->numify;
 
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);

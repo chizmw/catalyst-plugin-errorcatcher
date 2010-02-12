@@ -27,7 +27,11 @@ t/04.trace.t
 t/05.emit.email.cc.t
 t/05.emit.email.t
 t/06.emit.file.t
+t/07.emitter.moose.new.t
+t/07.emitter.new.t
 t/bug/RT54071.t
+t/lib/My/Emitter.pm
+t/lib/My/MooseEmitter.pm
 t/lib/noauth.conf
 t/lib/NoAuth.pm
 t/lib/NoAuth/Controller/Foo.pm
@@ -38,3 +42,5 @@ t/lib/testapp.conf
 t/lib/TestApp.pm
 t/lib/TestApp/Controller/Foo.pm
 t/lib/TestApp/Exception.pm
+t/lib/testapp_emitinit.conf
+t/lib/testapp_mooseemitinit.conf
