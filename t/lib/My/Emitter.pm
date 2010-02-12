@@ -5,14 +5,14 @@ use warnings;
 
 sub new {
     my $proto   = shift;
-    my $c = shift;
+    my $argref  = shift;
     my $class   = ref($proto) || $proto; 
     my $self    = {
         jason => 'tired',
     };
     bless( $self, $class );
 
-    $c->config->{"My::Emitter"}{set_in_new} = 1;
+    $argref->{c}->config->{"My::Emitter"}{set_in_new} = 1;
     
     return $self;
 }

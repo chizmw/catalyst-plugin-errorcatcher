@@ -124,9 +124,7 @@ sub _require_and_new {
         $e_cfg = $c->config->{$emitter_name} || {}; 
 
         eval {
-            $e = $emitter_name->new(
-                $c, $output
-            );
+            $e = $emitter_name->new({c=>$c});
         };
         if ($@) {
             $c->log->error($@);
