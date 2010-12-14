@@ -1,5 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
+{{$NEXT}}
+  - convert to Dist::Zilla
+
 0.0.7   Fri Feb 12 16:14:48 GMT 2010
     - call new() on requested emitters, if the method exists
     - store object from new() and use in the emit phase
