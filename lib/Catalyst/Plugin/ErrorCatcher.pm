@@ -1,5 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher;
-# vim: ts=8 sts=4 et sw=4 sr sta
+# ABSTRACT: Catch application errors and emit them somewhere
 use strict;
 use warnings;
 use 5.008001;
@@ -455,10 +455,6 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewhere
-
 =head1 SYNOPSIS
 
   use Catalyst qw/-Debug StackTrace ErrorCatcher/;
@@ -626,3 +622,5 @@ Ash Berlin for guiding me in the right direction after a known hacky first
 implementation.
 
 =cut
+
+# vim: ts=8 sts=4 et sw=4 sr sta

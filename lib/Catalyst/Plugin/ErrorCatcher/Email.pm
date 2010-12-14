@@ -1,5 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Email;
-# vim: ts=8 sts=4 et sw=4 sr sta
+# ABSTRACT: an email emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;
 
@@ -142,10 +142,6 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Catalyst::Plugin::ErrorCatcher::Email - an email emitter for Catalyst::Plugin::ErrorCatcher
-
 =head1 SYNOPSIS
 
 In your application:
@@ -200,3 +196,5 @@ Allowing you to set your subject like this:
   </Plugin::ErrorCatcher::Email>
 
 =cut
+
+# vim: ts=8 sts=4 et sw=4 sr sta

@@ -1,5 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::File;
-# vim: ts=8 sts=4 et sw=4 sr sta
+# ABSTRACT: a file emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;
 
@@ -75,10 +75,6 @@ __END__
 
 =pod
 
-=head1 NAME
-
-Catalyst::Plugin::ErrorCatcher::File - a file emitter for Catalyst::Plugin::ErrorCatcher
-
 =head1 SYNOPSIS
 
 In your application:
@@ -102,3 +98,5 @@ In your application configuration:
   </Plugin::ErrorCatcher::File>
 
 =cut
+
+# vim: ts=8 sts=4 et sw=4 sr sta
