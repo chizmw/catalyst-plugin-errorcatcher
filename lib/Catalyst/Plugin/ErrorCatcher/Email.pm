@@ -199,13 +199,4 @@ Allowing you to set your subject like this:
    subject    Report from: %h; %F, line %l
   </Plugin::ErrorCatcher::Email>
 
-=head1 AUTHORS
-
-Chisel Wright C<< <chisel@herlpacker.co.uk> >>
-
-=head1 COPYRIGHT
-
-This program is free software, you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
 =cut
