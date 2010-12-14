@@ -3,8 +3,6 @@ package Catalyst::Plugin::ErrorCatcher::File;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv(0.0.1.1)->numify;
-
 use DateTime;
 use Path::Class;
 use File::Slurp qw(write_file);

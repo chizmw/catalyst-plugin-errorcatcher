@@ -3,8 +3,6 @@ package Catalyst::Plugin::ErrorCatcher::Email;
 use strict;
 use warnings;
 
-use version; our $VERSION = qv(0.0.2.3)->numify;
-
 use MIME::Lite;
 use Sys::Hostname;
 

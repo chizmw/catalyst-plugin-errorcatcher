@@ -7,8 +7,6 @@ use base qw/Class::Data::Accessor/;
 use IO::File;
 use MRO::Compat;
 
-use version; our $VERSION = qv(0.0.7)->numify;
-
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_cfg/);
@@ -619,10 +617,6 @@ The test-suite coverage is quite low.
 L<Catalyst>,
 L<Catalyst::Plugin::StackTrace>
 
-=head1 AUTHORS
-
-Chisel Wright C<< <chisel@herlpacker.co.uk> >>
-
 =head1 THANKS
 
 The authors of L<Catalyst::Plugin::StackTrace>, from which a lot of
@@ -630,10 +624,5 @@ code was used.
 
 Ash Berlin for guiding me in the right direction after a known hacky first
 implementation.
-
-=head1 COPYRIGHT
-
-This program is free software, you can redistribute it and/or modify it
-under the same terms as Perl itself.
 
 =cut
