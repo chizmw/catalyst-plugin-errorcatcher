@@ -1,6 +1,7 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - RT#64278: manually specify dependencies used by tests
 
 0.0.8.2   2010-12-23 15:24:00 EST5EDT
   - RT#64128: generate deps with dzil's AutoPrereq plugin
