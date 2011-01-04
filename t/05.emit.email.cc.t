@@ -4,8 +4,7 @@ use strict;
 use warnings;
 
 BEGIN {
-    use FindBin;
-    use lib "$FindBin::Bin/lib";
+    use FindBin::libs;
 }
 
 use Test::More;

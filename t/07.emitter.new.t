@@ -7,8 +7,7 @@ use Test::More 0.92;
 use Test::Exception;
 
 BEGIN {
-    use FindBin;
-    use lib "$FindBin::Bin/lib";
+    use FindBin::libs;
 }
 
 BEGIN {
