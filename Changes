@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - RT#60483: specify minimum versions for plugins
+     to force the earliest MRO::Compat version
 
 0.0.8.5   2011-01-04 22:56:54 Europe/London
   - Make file/path munging behave more sensibly
