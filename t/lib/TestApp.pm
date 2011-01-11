@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Catalyst;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 # hide debug output at startup
 {
@@ -51,6 +51,10 @@ TestApp->setup(
         ErrorCatcher
         ConfigLoader
         Authentication
+
+        Session
+        Session::Store::File
+        Session::State::Cookie
     >
 );
 

@@ -94,7 +94,7 @@ use Catalyst::Test 'TestApp';
         { sub => 'Line: %l',    res => qq{Line: 30} },
         { sub => 'File: %F',    res => qq{File: TestApp/Controller/Foo.pm} },
         { sub => 'Package: %p', res => qq{Package: TestApp::Controller::Foo} },
-        { sub => 'Version: %V', res => qq{Version: v0.0.2} },
+        { sub => 'Version: %V', res => qq{Version: v0.0.3} },
         { sub => 'Name: %n',    res => qq{Name: TestApp} },
     );
 

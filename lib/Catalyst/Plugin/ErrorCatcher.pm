@@ -27,9 +27,10 @@ sub setup {
     my $config = $c->config->{'Plugin::ErrorCatcher'} || {};
 
     # set some defaults
-    $config->{context}      ||= 4;
-    $config->{verbose}      ||= 0;
-    $config->{always_log}   ||= 0;
+    $config->{context}         ||= 4;
+    $config->{verbose}         ||= 0;
+    $config->{always_log}      ||= 0;
+    $config->{include_session} ||= 0;
     
     # start with an empty hash
     $c->_errorcatcher_emitter_of({});
@@ -385,6 +386,21 @@ sub _prepare_message {
         $feedback .= "\nStack trace unavailable - use and enable Catalyst::Plugin::StackTrace\n";
     }
 
+    # RT-64492 - add session data if requested
+    if (
+        $c->_errorcatcher_cfg->{include_session}
+        and defined $c->session
+    ) {
+        eval { require Data::Dump };
+        if (my $e=$@) {
+            $feedback .= "\nSession data requested but failed to require Data::Dump:\n";
+            $feedback .= "    $e\n"
+        }
+        else {
+            $feedback .= "\nSession Data:\n" . Data::Dump::pp($c->session) . "\n";
+        }
+    }
+
     # in case we bugger up the s/// on the original error message
     if ($full_error) {
         $feedback .= "\nOriginal Error:\n\n$full_error";
@@ -470,9 +486,10 @@ L<Catalyst::Plugin::StackTrace> plugin.
 The plugin is configured in a similar manner to other Catalyst plugins:
 
   <Plugin::ErrorCatcher>
-    enable      1
-    context     5
-    always_log  0
+    enable          1
+    context         5
+    always_log      0
+    include_session 0
 
     emit_module A::Module
   </Plugin::ErrorCatcher>
@@ -515,6 +532,17 @@ suppress the I<info> log message if one or more of them succeeded.
 
 If you wish to log the information, via C<$c-E<gt>log()> then set this value
 to 1.
+
+=item B<include_session>
+
+The default behaviour is to suppress potentially sensitive and revealing
+session-data in the error report.
+
+If you feel that this information is useful in your investigations set the
+value to I<true>.
+
+When set to 1 the report will include a C<Data::Dump::pp()> representation of
+the request's session. 
 
 =back
 

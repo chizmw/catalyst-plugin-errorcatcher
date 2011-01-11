@@ -130,5 +130,21 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     );
 }
 
+# RT-64492 - check no session data in default report
+TestApp->config->{stacktrace}{enable} = 1;
+TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
+{
+    ok( my ($res,$c) = ctx_request('http://localhost/foo/not_ok'), 'request ok' );
+    my $ec_msg;
+    eval{ $ec_msg = $c->_errorcatcher_msg };
+    ok( defined $ec_msg, 'parsed error message ok' );
+    foreach my $session_key (qw/__created __updated/) {
+        unlike(
+            $ec_msg,
+            qr{__created},
+            "no instances of '$session_key' in report"
+        );
+    }
+}
 
 done_testing;
