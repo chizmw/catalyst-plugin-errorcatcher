@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.6   2011-01-20 18:47:55 Europe/London
   - RT#60483: specify minimum versions for plugins
      to force the earliest MRO::Compat version
   - RT#64492: add 'include_session' option and accompanying output
