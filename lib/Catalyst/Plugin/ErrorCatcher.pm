@@ -299,6 +299,19 @@ sub _cleaned_error_message {
         $
     }{$1}xmsg;
 
+    # column XXX does not exist
+    $error_message =~ s{
+        \A
+        .+?
+        DBI \s Exception:
+        .+?
+        ERROR:\s+
+        (column \s+ \S+ \s+ does \s+ not \s+ exist)
+        \s+
+        .+
+        $
+    }{$1}xmsg;
+
     chomp $error_message;
     return $error_message;
 }
