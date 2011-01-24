@@ -1,8 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - use plugins for tidying messages
   - add more cleanup regexps
-  - add test for message cleanup function
 
 0.0.8.6   2011-01-20 18:47:55 Europe/London
   - RT#60483: specify minimum versions for plugins

@@ -6,6 +6,7 @@ use 5.008001;
 use base qw/Class::Data::Accessor/;
 use IO::File;
 use MRO::Compat;
+use Module::Pluggable::Object;
 
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
 __PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);
@@ -269,49 +270,21 @@ sub _require_and_emit {
 sub _cleaned_error_message {
     my $error_message = shift;
 
-    # Caught exception ... ... line XX."
-    $error_message =~ s{
-        Caught\s+exception\s+in\s+
-        \S+\s+
-        "
-        (.+?)
-        \s+at\s+
-        \S+
-        \s+
-        line
-        \s+
-        .*
-        "
-        $
-    }{$1}xmsg;
+    # load message cleaning plugins
+    my %opts = (
+        require     => 1,
+        search_path => ['Catalyst::Plugin::ErrorCatcher::Plugin'],
+    );
+    my $finder = Module::Pluggable::Object->new(%opts);
 
-    # DBIx::Class::Schema::txn_do(): ... ... line XX
-    $error_message =~ s{
-        DBIx::Class::Schema::txn_do\(\):
-        \s+
-        (.+?)
-        \s+at\s+
-        \S+
-        \s+
-        line
-        \s+
-        .*
-        $
-    }{$1}xmsg;
+    # loop through plugins and let them do some message tidying
+    foreach my $plugin ($finder->plugins) {
+        $plugin->tidy_message(\$error_message)
+            if $plugin->can('tidy_message');
+    }
 
-    # column XXX does not exist
-    $error_message =~ s{
-        \A
-        .+?
-        DBI \s Exception:
-        .+?
-        ERROR:\s+
-        (column \s+ \S+ \s+ does \s+ not \s+ exist)
-        \s+
-        .+
-        $
-    }{$1}xmsg;
-
+    # get rid of annoying newlines and return a potentially clean error
+    # message
     chomp $error_message;
     return $error_message;
 }
