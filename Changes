@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.7   2011-01-24 21:36:49 Europe/London
   - use plugins for tidying messages
   - add more cleanup regexps
 
