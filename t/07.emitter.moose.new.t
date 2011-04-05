@@ -71,7 +71,7 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     # we should have some user information
     like(
         $ec_msg,
-        qr{User: buffy \(Catalyst::Authentication::User::Hash\)},
+        qr{User: buffy \[id\] \(Catalyst::Authentication::User::Hash\)},
         'user details ok'
     );
 
