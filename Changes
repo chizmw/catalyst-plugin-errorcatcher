@@ -2,6 +2,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
   - add user_identified_by option for identifying users in reports
+  - better email tag handling with no stack frame info
 
 0.0.8.7   2011-01-24 21:36:49 Europe/London
   - use plugins for tidying messages

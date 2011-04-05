@@ -97,16 +97,18 @@ sub _parse_tags {
     my $c       = shift;
     my $subject = shift;
 
+    my $first_frame = $c->_errorcatcher_first_frame || {};
+
     my %tag_of = (
         '%h' => sub{Sys::Hostname::hostname()||'UnknownHost'},
-        '%f' => sub{$c->_errorcatcher_first_frame->{file}||'UnknownFile'},
+        '%f' => sub{$first_frame->{file}||'UnknownFile'},
         '%F' => sub{
-            my $val=$c->_errorcatcher_first_frame->{file}||'UnknownFile';
+            my $val=$first_frame->{file}||'UnknownFile';
             # ideally replace with cross-platform directory separator
             return _munge_path($val);
         },
-        '%l' => sub{$c->_errorcatcher_first_frame->{line}||'UnknownLine'},
-        '%p' => sub{$c->_errorcatcher_first_frame->{pkg}||'UnknownPackage'},
+        '%l' => sub{$first_frame->{line}||'UnknownLine'},
+        '%p' => sub{$first_frame->{pkg}||'UnknownPackage'},
         '%V' => sub{$c->config->{version}||'UnknownVersion'},
         '%n' => sub{$c->config->{name}||'UnknownAppName'},
     );
