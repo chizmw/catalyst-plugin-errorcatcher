@@ -2,6 +2,9 @@ NAME
     Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them
     somewhere
 
+VERSION
+    version 0.0.8.8
+
 SYNOPSIS
       use Catalyst qw/-Debug StackTrace ErrorCatcher/;
 
@@ -14,13 +17,16 @@ CONFIGURATION
     The plugin is configured in a similar manner to other Catalyst plugins:
 
       <Plugin::ErrorCatcher>
-        enabled     1
-        context     5
+          enable                1
+          context               5
+          always_log            0
+          include_session       0
+          user_identified_by    username
 
-        emit_module A::Module
+          emit_module           A::Module
       </Plugin::ErrorCatcher>
 
-    enabled
+    enable
         Setting this to *true* forces the module to work its voodoo.
 
         It's also enabled if the value is unset and you're running Catalyst
@@ -47,6 +53,65 @@ CONFIGURATION
         For details on how to implement a custom emitter see "CUSTOM EMIT
         CLASSES" in this documentation.
 
+    always_log
+        The default plugin behaviour when using one or more emitter modules
+        is to suppress the *info* log message if one or more of them
+        succeeded.
+
+        If you wish to log the information, via "$c->log()" then set this
+        value to 1.
+
+    include_session
+        The default behaviour is to suppress potentially sensitive and
+        revealing session-data in the error report.
+
+        If you feel that this information is useful in your investigations
+        set the value to *true*.
+
+        When set to 1 the report will include a "Data::Dump::pp()"
+        representation of the request's session.
+
+    user_identified_by
+        If there's a logged-in user use the specified value as the method to
+        identify the user.
+
+        If the specified value is invalid the module defaults to using *id*.
+
+        If unspecified the value defaults to *id*.
+
+STACKTRACE IN REPORTS WHEN NOT RUNNING IN DEBUG MODE
+    It is possible to run your application in non-Debug mode, and still have
+    errors reported with a stack-trace.
+
+    Include the StackTrace and ErrorCatcher plugins in MyApp.pm:
+
+      use Catalyst qw<
+        ErrorCatcher
+        StackTrace
+      >;
+
+    Set up your "myapp.conf" to include the following:
+
+      <stacktrace>
+        enable      1
+      </stacktrace>
+
+      <Plugin::ErrorCatcher>
+        enable      1
+        # include other options here
+      <Plugin::ErrorCatcher>
+
+    Any exceptions should now show your user the *"Please come back later"*
+    screen whilst still capturing and emitting a report with stack-trace.
+
+PROVIDED EMIT CLASSES
+  Catalyst::Plugin::ErrorCatcher::Email
+    This module uses MIME::Lite to send the prepared output to a specified
+    email address.
+
+    See Catalyst::Plugin::ErrorCatcher::Email for usage and configuration
+    details.
+
 CUSTOM EMIT CLASSES
     A custom emit class takes the following format:
 
@@ -54,18 +119,18 @@ CUSTOM EMIT CLASSES
       # vim: ts=8 sts=4 et sw=4 sr sta
       use strict;
       use warnings;
-      
-  sub emit {
+  
+      sub emit {
         my ($class, $c, $output) = @_;
-      
-    $c->log->info(
+  
+        $c->log->info(
           'IGNORING OUTPUT FROM Catalyst::Plugin::ErrorCatcher'
         );
-      
-    return;
+  
+        return;
       }
-      
-  1;
+  
+      1;
       __END__
 
     The only requirement is that you have a sub called "emit".
@@ -89,13 +154,10 @@ CUSTOM EMIT CLASSES
     see fit.
 
 KNOWN ISSUES
-    This module has no tests!
+    The test-suite coverage is quite low.
 
 SEE ALSO
     Catalyst, Catalyst::Plugin::StackTrace
-
-AUTHORS
-    Chisel Wright "<chisel@herlpacker.co.uk>"
 
 THANKS
     The authors of Catalyst::Plugin::StackTrace, from which a lot of code
@@ -104,7 +166,12 @@ THANKS
     Ash Berlin for guiding me in the right direction after a known hacky
     first implementation.
 
-COPYRIGHT
-    This program is free software, you can redistribute it and/or modify it
-    under the same terms as Perl itself.
+AUTHOR
+    Chisel Wright <chisel@chizography.net>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2011 by Chisel Wright.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 
