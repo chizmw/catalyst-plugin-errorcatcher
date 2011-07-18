@@ -6,3 +6,4 @@ pm_to_blib
 Catalyst-Plugin-ErrorCatcher-*/
 Catalyst-Plugin-ErrorCatcher-*.tar.gz
 /.build/
+.prove
