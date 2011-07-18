@@ -1,19 +1,37 @@
 package Catalyst::Plugin::ErrorCatcher;
 # ABSTRACT: Catch application errors and emit them somewhere
-use strict;
-use warnings;
+use Moose;
+use MooseX::ClassAttribute;
 use 5.008001;
-use base qw/Class::Data::Accessor/;
 use IO::File;
-use MRO::Compat;
 use Module::Pluggable::Object;
 
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher/);
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher_msg/);
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher_cfg/);
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher_c_cfg/);
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher_first_frame/);
-__PACKAGE__->mk_classaccessor(qw/_errorcatcher_emitter_of/);
+class_has '_errorcatcher' => (
+    is  => 'rw',
+    isa => 'ArrayRef|Undef',
+);
+class_has '_errorcatcher_msg' => (
+    is  => 'rw',
+    isa => 'Str|Undef',
+);
+class_has '_errorcatcher_cfg' => (
+    is  => 'rw',
+    isa => 'HashRef',
+);
+class_has '_errorcatcher_c_cfg' => (
+    is  => 'rw',
+    isa => 'HashRef',
+);
+class_has '_errorcatcher_first_frame' => (
+    is  => 'rw',
+);
+class_has '_errorcatcher_emitter_of' => (
+    is  => 'rw',
+);
+
+__PACKAGE__->meta()->make_immutable();
+no Moose;
+no MooseX::ClassAttribute;
 
 sub setup {
     my $c = shift @_;
@@ -419,6 +437,7 @@ sub _keep_frames {
         $c->_errorcatcher( $stacktrace );
     }
     else {
+        $c->_errorcatcher( undef );
         $c->log->debug(
                 __PACKAGE__
             . q{ has no stack-trace information}

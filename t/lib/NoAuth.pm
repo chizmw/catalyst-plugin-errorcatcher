@@ -1,10 +1,11 @@
 package NoAuth;
 # vim: ts=8 sts=4 et sw=4 sr sta
-use strict;
-use warnings;
-use Catalyst;
+use Moose;
+    extends 'Catalyst';
+use namespace::autoclean;
+use Catalyst::Runtime 5.80;
 
-our $VERSION = '0.0.2';
+our $VERSION = '0.0.3';
 
 # hide debug output at startup
 {
@@ -14,7 +15,7 @@ our $VERSION = '0.0.2';
     *{"Catalyst\::Log\::info"}  = sub { };
 }
 
-NoAuth->config(
+__PACKAGE__->config(
     name => 'NoAuth',
 );
 
@@ -26,7 +27,7 @@ VERSION_MADNESS: {
     );
 }
 
-NoAuth->setup(
+__PACKAGE__->setup(
     qw<
         -Debug
         StackTrace

@@ -1,10 +1,11 @@
 package TestApp;
 # vim: ts=8 sts=4 et sw=4 sr sta
-use strict;
-use warnings;
-use Catalyst;
+use Moose;
+    extends 'Catalyst';
+use namespace::autoclean;
+use Catalyst::Runtime 5.80;
 
-our $VERSION = '0.0.3';
+our $VERSION = '0.0.4';
 
 # hide debug output at startup
 {
@@ -14,7 +15,7 @@ our $VERSION = '0.0.3';
     *{"Catalyst\::Log\::info"}  = sub { };
 }
 
-TestApp->config(
+__PACKAGE__->config(
     name => 'TestApp',
 
     'Plugin::Authentication' => {
@@ -44,7 +45,7 @@ VERSION_MADNESS: {
     );
 }
 
-TestApp->setup(
+__PACKAGE__->setup(
     qw<
         -Debug
         StackTrace
