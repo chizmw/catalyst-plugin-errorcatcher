@@ -1,37 +1,20 @@
 package Catalyst::Plugin::ErrorCatcher;
 # ABSTRACT: Catch application errors and emit them somewhere
 use Moose;
-use MooseX::ClassAttribute;
+    with 'Catalyst::ClassData';
 use 5.008001;
 use IO::File;
 use Module::Pluggable::Object;
 
-class_has '_errorcatcher' => (
-    is  => 'rw',
-    isa => 'ArrayRef|Undef',
-);
-class_has '_errorcatcher_msg' => (
-    is  => 'rw',
-    isa => 'Str|Undef',
-);
-class_has '_errorcatcher_cfg' => (
-    is  => 'rw',
-    isa => 'HashRef',
-);
-class_has '_errorcatcher_c_cfg' => (
-    is  => 'rw',
-    isa => 'HashRef',
-);
-class_has '_errorcatcher_first_frame' => (
-    is  => 'rw',
-);
-class_has '_errorcatcher_emitter_of' => (
-    is  => 'rw',
-);
+__PACKAGE__->mk_classdata('_errorcatcher');
+__PACKAGE__->mk_classdata('_errorcatcher_msg');
+__PACKAGE__->mk_classdata('_errorcatcher_cfg');
+__PACKAGE__->mk_classdata('_errorcatcher_c_cfg');
+__PACKAGE__->mk_classdata('_errorcatcher_first_frame');
+__PACKAGE__->mk_classdata('_errorcatcher_emitter_of');
 
 __PACKAGE__->meta()->make_immutable();
 no Moose;
-no MooseX::ClassAttribute;
 
 sub setup {
     my $c = shift @_;
