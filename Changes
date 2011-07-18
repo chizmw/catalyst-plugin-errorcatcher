@@ -1,6 +1,7 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - drop Class::Data::Accessor in favour of Catalyst::ClassData
 
 0.0.8.8   2011-04-05 14:16:35 Europe/London
   - add user_identified_by option for identifying users in reports
