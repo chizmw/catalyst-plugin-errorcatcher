@@ -49,4 +49,13 @@ sub crash_user : Local {
     die 'Vampire';
 }
 
+sub referer : Local {
+    my ( $self, $c ) = @_;
+
+    # manually set a referer so we can test for it
+    $c->request->headers->header(Referer => 'http://garlic-weapons.tv');
+
+    $c->forward( 'crash' );
+}
+
 1;

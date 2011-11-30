@@ -327,6 +327,10 @@ sub _prepare_message {
     $feedback .= "     URI: " . ($c->request->uri||q{n/a}) . "\n";
     $feedback .= "  Method: " . ($c->request->method||q{n/a}) . "\n";
 
+    if (defined $c->request->referer) {
+        $feedback .= " Referer: " . $c->request->referer . "\n";
+    }
+
     my $user_identifier_method =
         $c->_errorcatcher_cfg->{user_identified_by};
     # if we have a logged-in user, add to the feedback
@@ -344,6 +348,31 @@ sub _prepare_message {
             $feedback .= "\n";
         }
     }
+
+    sub _output_params {
+        my ($label,$params) = @_;
+        my $extra_output = q{};
+        return $extra_output
+            unless keys %$params;
+        # work out the longest key
+        # (http://www.webmasterkb.com/Uwe/Forum.aspx/perl/7596/Maximum-length-of-hash-key)
+        my $l; $l|=$_ foreach keys %$params; $l=length $l;
+        # give the next set of output a header
+        $extra_output .= "\nParams ($label):\n";
+        # output the key-value pairs
+        foreach my $k (sort keys %{$params}) {
+            $extra_output .= sprintf("  %${l}s: %s\n", $k, $params->{$k});
+        }
+
+        return $extra_output;
+    }
+
+    my $params; # share with GET and POST output
+    # output any GET params
+    $feedback .= _output_params('GET', $c->request->query_parameters);
+
+    # output any POST params
+    $feedback .= _output_params('POST', $c->request->body_parameters);
 
     if ('ARRAY' eq ref($c->_errorcatcher)) {
         # push on information and context
