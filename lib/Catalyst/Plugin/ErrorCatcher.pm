@@ -295,7 +295,7 @@ sub _cleaned_error_message {
 sub append_feedback {
     my $fb_ref = shift;
     my $data   = shift;
-    $$fb_ref  //= q{};
+    $$fb_ref ||= q{};
     $$fb_ref  .= $data . qq{\n};
 }
 
@@ -307,7 +307,7 @@ sub append_feedback_keyvalue {
     # don't add undefined values
     return
         unless defined $_[2];
-    my $padding = $_[3] // 8;
+    my $padding = $_[3] || 8;
     append_feedback(
         $_[0],
         sprintf("%${padding}s: %s", $_[1], $_[2])
