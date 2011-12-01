@@ -2,7 +2,8 @@ package Catalyst::Plugin::ErrorCatcher;
 # ABSTRACT: Catch application errors and emit them somewhere
 use Moose;
     with 'Catalyst::ClassData';
-use 5.008001;
+use 5.008004;
+use File::Type;
 use IO::File;
 use Module::Pluggable::Object;
 
@@ -315,6 +316,35 @@ sub append_feedback_keyvalue {
     return;
 }
 
+sub sanitise_param {
+    my $value   = shift;
+    my $ft      = File::Type->new();
+    my $type    = $ft->checktype_contents( $value );
+
+    # if it's short, just show it
+    return $value
+        if (length($value) < 40);
+
+    # if our mimetype isn't application/octet-stream just report what was
+    # submitted
+    if ($type ne 'application/octet-stream') {
+        return $type;
+    }
+
+    # replace newlines ... so we don't screw up formatting
+    $value =~ s{\n}{\\n}g;
+    $value =~ s{\r}{\\r}g;
+
+    # getting here means we're 'application/octet-stream'
+    # we could make guesses if we're really text/plain but for now
+    # ... we're long, return a substring of ourseld
+    # (if this gives troublesome results we'll tweak accordingly)
+    return sprintf(
+        '%s...[truncated]',
+        substr($value, 0, 40)
+    );
+}
+
 sub append_output_params {
     my $fb_ref = shift;
     my ($label,$params) = @_;
@@ -326,7 +356,8 @@ sub append_output_params {
     append_feedback($fb_ref, "Params ($label):");
     # output the key-value pairs
     foreach my $k (sort keys %{$params}) {
-        append_feedback_keyvalue($fb_ref, $k, $params->{$k}, $l+2);
+        my $processed_value = sanitise_param($params->{$k});
+        append_feedback_keyvalue($fb_ref, $k, $processed_value, $l+2);
     }
     append_feedback_emptyline($fb_ref);
 }

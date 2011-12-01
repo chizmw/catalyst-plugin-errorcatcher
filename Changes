@@ -2,6 +2,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
   - RT#72781: emit referer and GET/POST parameter data
+    - Better output with long values in parameters
   - update dzil config with current preferred preferences
 
 0.0.8.9   2011-07-18 17:26:58 Europe/London

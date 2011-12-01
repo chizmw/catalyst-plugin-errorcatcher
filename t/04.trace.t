@@ -284,6 +284,50 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     # we should have keys and values for each query param
     _has_keys_for_section('POST', [qw(vampire slayer)], $ec_msg);
 }
+# test output with long values in parameters
+{
+    # we still need to get to $c; this appears to be the only way
+    ok ( my (undef,$c) = ctx_request('http://localhost/ok'), 'setup $c for POST');
+    # make a request with POST data
+    use HTTP::Request::Common;
+    my $response = request POST '/foo/not_ok?integer=69&fruit=' . 'banana' x 10, [
+        long_text => 'kangaroo' x 8,
+        normal    => 'short_thing',
+        # pad out the file types we're fakng so we aren't short enough to just
+        # return
+        image_gif => 'GIF87a'   . 'Z' x 100,
+        image_png => "\x89PNG"  . 'Z' x 100,
+        pdf_file  => '%PDF-'    . 'Z' x 100,
+    ];
+
+    my $ec_msg;
+    eval{ $ec_msg = $c->_errorcatcher_msg };
+    ok( defined $ec_msg, 'parsed error message ok' );
+
+    # we should have some referer information
+    _has_no_referer_ok($ec_msg);
+
+    # GET
+    # we should have the get header and lines with the key-value pairs
+    _has_GET_output($ec_msg);
+    # we should have keys and values for each query param
+    _has_keys_for_section('GET', [qw(fruit integer)], $ec_msg);
+
+    # POST
+    # we should have the get header and lines with the key-value pairs
+    _has_POST_output($ec_msg);
+    # we should have keys and values for each query param
+    _has_keys_for_section('POST', [qw(image_gif image_png long_text pdf_file normal)], $ec_msg);
+
+    # check the values look sane
+    _has_value_for_key('POST', 'image_gif', 'image/gif', $ec_msg);
+    _has_value_for_key('POST', 'image_png', 'image/x-png', $ec_msg);
+    _has_value_for_key('POST', 'pdf_file',  'application/pdf', $ec_msg);
+    _has_value_for_key('POST', 'normal',    'short_thing', $ec_msg);
+    _has_value_for_key('POST', 'long_text', 'kangarookangarookangarookangarookangaroo...[truncated]', $ec_msg);
+    _has_value_for_key( 'GET', 'fruit',     'bananabananabananabananabananabananabana...[truncated]', $ec_msg);
+    _has_value_for_key( 'GET', 'integer',   69, $ec_msg);
+}
 
 # helper methods for RT-72781 testing
 sub _has_referer_ok {
@@ -333,6 +377,23 @@ sub _has_keys_for_section {
             "'$key' exists in $type section"
         );
     }
+}
+sub _has_value_for_key {
+    my ($type, $key, $value, $msg) = @_;
+    like(
+        $msg,
+        qr{
+            Params\s+\(\Q$type\E\): # section header
+            .+?                     # non-greedy anything-ness
+            ^\s+\Q$key\E:           # the line with our key on it
+            \s+                     # whitespace after the key label
+            \Q$value\E              # a specific value for the key
+            \s*$                    # optional whitespace up to the end of the line
+            .+?                     # non-greedy anything-ness
+            ^$                      # blank line at end of section
+        }xms,
+        "'$key' has value '$value' in $type section"
+    );
 }
 
 done_testing;
