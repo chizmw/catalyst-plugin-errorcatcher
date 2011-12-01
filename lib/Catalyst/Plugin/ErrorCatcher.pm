@@ -291,6 +291,46 @@ sub _cleaned_error_message {
     return $error_message;
 }
 
+
+sub append_feedback {
+    my $fb_ref = shift;
+    my $data   = shift;
+    $$fb_ref  //= q{};
+    $$fb_ref  .= $data . qq{\n};
+}
+
+sub append_feedback_emptyline {
+    append_feedback($_[0], q[]);
+}
+
+sub append_feedback_keyvalue {
+    # don't add undefined values
+    return
+        unless defined $_[2];
+    my $padding = $_[3] // 8;
+    append_feedback(
+        $_[0],
+        sprintf("%${padding}s: %s", $_[1], $_[2])
+    );
+    return;
+}
+
+sub append_output_params {
+    my $fb_ref = shift;
+    my ($label,$params) = @_;
+    return unless keys %$params;
+    # work out the longest key
+    # (http://www.webmasterkb.com/Uwe/Forum.aspx/perl/7596/Maximum-length-of-hash-key)
+    my $l; $l|=$_ foreach keys %$params; $l=length $l;
+    # give the next set of output a header
+    append_feedback($fb_ref, "Params ($label):");
+    # output the key-value pairs
+    foreach my $k (sort keys %{$params}) {
+        append_feedback_keyvalue($fb_ref, $k, $params->{$k}, $l+2);
+    }
+    append_feedback_emptyline($fb_ref);
+}
+
 sub _prepare_message {
     my $c = shift;
     my ($feedback, $full_error, $parsed_error);
@@ -303,15 +343,17 @@ sub _prepare_message {
     $parsed_error = _cleaned_error_message($full_error);
 
     # A title for the feedback
-    $feedback .= qq{Exception caught:\n};
+    append_feedback(\$feedback, qq{Exception caught:} );
+    append_feedback_emptyline(\$feedback);
 
     # the (parsed) error
-    $feedback .= "\n   Error: " . $parsed_error . "\n";
+    append_feedback_keyvalue(\$feedback, "Error", $parsed_error);
 
     # general request information
     # some of these aren't always defined...
-    $feedback .= "    Time: " . scalar(localtime) . "\n";
+    append_feedback_keyvalue(\$feedback, "Time", scalar(localtime));
 
+    # TODO use append_...() method
     $feedback .= "  Client: " . $c->request->address
         if (defined $c->request->address);
     if (defined $c->request->hostname) {
@@ -321,16 +363,12 @@ sub _prepare_message {
         $feedback .= "\n";
     }
 
-    if (defined $c->request->user_agent) {
-        $feedback .= "   Agent: " . $c->request->user_agent . "\n";
-    }
-    $feedback .= "     URI: " . ($c->request->uri||q{n/a}) . "\n";
-    $feedback .= "  Method: " . ($c->request->method||q{n/a}) . "\n";
+    append_feedback_keyvalue(\$feedback, 'Agent',   $c->request->user_agent);
+    append_feedback_keyvalue(\$feedback, 'URI',    ($c->request->uri    || q{n/a}));
+    append_feedback_keyvalue(\$feedback, 'Method', ($c->request->method || q{n/a}));
+    append_feedback_keyvalue(\$feedback, 'Referer', $c->request->referer);
 
-    if (defined $c->request->referer) {
-        $feedback .= " Referer: " . $c->request->referer . "\n";
-    }
-
+    # TODO use append_...() method
     my $user_identifier_method =
         $c->_errorcatcher_cfg->{user_identified_by};
     # if we have a logged-in user, add to the feedback
@@ -349,30 +387,13 @@ sub _prepare_message {
         }
     }
 
-    sub _output_params {
-        my ($label,$params) = @_;
-        my $extra_output = q{};
-        return $extra_output
-            unless keys %$params;
-        # work out the longest key
-        # (http://www.webmasterkb.com/Uwe/Forum.aspx/perl/7596/Maximum-length-of-hash-key)
-        my $l; $l|=$_ foreach keys %$params; $l=length $l;
-        # give the next set of output a header
-        $extra_output .= "\nParams ($label):\n";
-        # output the key-value pairs
-        foreach my $k (sort keys %{$params}) {
-            $extra_output .= sprintf("  %${l}s: %s\n", $k, $params->{$k});
-        }
-
-        return $extra_output;
-    }
-
     my $params; # share with GET and POST output
+    append_feedback_emptyline(\$feedback);
     # output any GET params
-    $feedback .= _output_params('GET', $c->request->query_parameters);
+    append_output_params(\$feedback, 'GET', $c->request->query_parameters);
 
     # output any POST params
-    $feedback .= _output_params('POST', $c->request->body_parameters);
+    append_output_params(\$feedback, 'POST', $c->request->body_parameters);
 
     if ('ARRAY' eq ref($c->_errorcatcher)) {
         # push on information and context
@@ -398,12 +419,16 @@ sub _prepare_message {
                 $c->_errorcatcher_cfg->{context}
             );
 
-            $feedback .= "\nPackage: $pkg\n   Line: $line\n   File: $file\n";
-            $feedback .= "\n$code_preview\n";
+            append_feedback_keyvalue(\$feedback, 'Package', $pkg);
+            append_feedback_keyvalue(\$feedback, 'Line',    $line);
+            append_feedback_keyvalue(\$feedback, 'File',    $file);
+            append_feedback_emptyline(\$feedback);
+            append_feedback(\$feedback, $code_preview);
         }
     }
     else {
-        $feedback .= "\nStack trace unavailable - use and enable Catalyst::Plugin::StackTrace\n";
+        append_feedback_emptyline(\$feedback);
+        append_feedback(\$feedback, "Stack trace unavailable - use and enable Catalyst::Plugin::StackTrace");
     }
 
     # RT-64492 - add session data if requested
@@ -413,17 +438,20 @@ sub _prepare_message {
     ) {
         eval { require Data::Dump };
         if (my $e=$@) {
-            $feedback .= "\nSession data requested but failed to require Data::Dump:\n";
-            $feedback .= "    $e\n"
+            append_feedback(\$feedback, 'Session data requested but failed to require Data::Dump:');
+            append_feedback(\$feedback, "  $e");
         }
         else {
-            $feedback .= "\nSession Data:\n" . Data::Dump::pp($c->session) . "\n";
+            append_feedback(\$feedback, 'Session Data');
+            append_feedback(\$feedback,  Data::Dump::pp($c->session));
         }
     }
 
     # in case we bugger up the s/// on the original error message
     if ($full_error) {
-        $feedback .= "\nOriginal Error:\n\n$full_error";
+        append_feedback(\$feedback, 'Original Error:');
+        append_feedback_emptyline(\$feedback);
+        append_feedback(\$feedback, $full_error);
     }
 
     # store it, otherwise we've done the above for mothing
