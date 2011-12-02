@@ -18,6 +18,11 @@ my @test_cases = (
         original    => q{DBIx::Class::Schema::txn_do(): txn death at /home/chisel/development/github/TxnDo/script/../lib/TxnDo/Controller/Root.pm line 41.},
         cleaned     => q{txn death},
     },
+
+    {
+        original    => qq{Error: encountered object 'DBIx::Class::AuditLog::delete(): DBI Exception: DBD::Pg::st execute failed: ERROR:  update or delete on table "TheTable" violates foreign key constraint "foo_fkey" on table "fkey_table"\nDETAIL:  Key (id, thing_id)=(1, 5) is still referenced from table "fkey_table". [for Statement "DELETE FROM public.thingy WHERE ( id = ? )" with ParamValues: 1='1']},
+        cleaned     => q{Foreign key constraint violation: TheTable -> fkey_table [foo_fkey]},
+    }
 );
 
 foreach my $test (@test_cases) {
