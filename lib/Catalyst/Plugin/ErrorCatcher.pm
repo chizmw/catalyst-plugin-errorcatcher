@@ -318,12 +318,29 @@ sub append_feedback_keyvalue {
 
 sub sanitise_param {
     my $value   = shift;
-    my $ft      = File::Type->new();
-    my $type    = $ft->checktype_contents( $value );
+
+    # stolen from Data::Dumper::qquote
+    my $dumped_value;
+    {
+        my %esc = (
+            "\a" => "\\a",
+            "\b" => "\\b",
+            "\t" => "\\t",
+            "\n" => "\\n",
+            "\f" => "\\f",
+            "\r" => "\\r",
+            "\e" => "\\e",
+        );
+        ($dumped_value = $value) =~ s{([\a\b\t\n\f\r\e])}{$esc{$1}}g;
+    }
 
     # if it's short, just show it
-    return $value
+    return $dumped_value
         if (length($value) < 40);
+
+    # make a guess at a possible filetype
+    my $ft      = File::Type->new();
+    my $type    = $ft->checktype_contents( $value );
 
     # if our mimetype isn't application/octet-stream just report what was
     # submitted
@@ -331,17 +348,13 @@ sub sanitise_param {
         return $type;
     }
 
-    # replace newlines ... so we don't screw up formatting
-    $value =~ s{\n}{\\n}g;
-    $value =~ s{\r}{\\r}g;
-
     # getting here means we're 'application/octet-stream'
     # we could make guesses if we're really text/plain but for now
     # ... we're long, return a substring of ourseld
     # (if this gives troublesome results we'll tweak accordingly)
     return sprintf(
         '%s...[truncated]',
-        substr($value, 0, 40)
+        substr($dumped_value, 0, 40)
     );
 }
 

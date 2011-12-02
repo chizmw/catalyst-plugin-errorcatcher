@@ -293,6 +293,7 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     my $response = request POST '/foo/not_ok?integer=69&fruit=' . 'banana' x 10, [
         long_text => 'kangaroo' x 8,
         normal    => 'short_thing',
+        evil      => "two\nlines",
         # pad out the file types we're fakng so we aren't short enough to just
         # return
         image_gif => 'GIF87a'   . 'Z' x 100,
@@ -317,7 +318,7 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     # we should have the get header and lines with the key-value pairs
     _has_POST_output($ec_msg);
     # we should have keys and values for each query param
-    _has_keys_for_section('POST', [qw(image_gif image_png long_text pdf_file normal)], $ec_msg);
+    _has_keys_for_section('POST', [qw(image_gif image_png long_text pdf_file normal evil)], $ec_msg);
 
     # check the values look sane
     _has_value_for_key('POST', 'image_gif', 'image/gif', $ec_msg);
@@ -327,6 +328,7 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     _has_value_for_key('POST', 'long_text', 'kangarookangarookangarookangarookangaroo...[truncated]', $ec_msg);
     _has_value_for_key( 'GET', 'fruit',     'bananabananabananabananabananabananabana...[truncated]', $ec_msg);
     _has_value_for_key( 'GET', 'integer',   69, $ec_msg);
+    _has_value_for_key( 'GET', 'evil',      'two\nlines', $ec_msg);
 }
 
 # helper methods for RT-72781 testing
