@@ -1,0 +1,202 @@
+# NAME
+
+Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewhere
+
+# VERSION
+
+version 0.0.8.10
+
+# SYNOPSIS
+
+    use Catalyst qw/-Debug StackTrace ErrorCatcher/;
+
+# DESCRIPTION
+
+This plugin allows you to do More Stuff with the information that would
+normally only be seen on the Catalyst Error Screen courtesy of the
+[Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace) plugin.
+
+# CONFIGURATION
+
+The plugin is configured in a similar manner to other Catalyst plugins:
+
+    <Plugin::ErrorCatcher>
+        enable                1
+        context               5
+        always_log            0
+        include_session       0
+        user_identified_by    username
+
+        emit_module           A::Module
+    </Plugin::ErrorCatcher>
+
+- __enable__
+
+Setting this to _true_ forces the module to work its voodoo.
+
+It's also enabled if the value is unset and you're running Catalyst in
+debug-mode.
+
+- __context__
+
+When there is stack-trace information to share, how many lines of context to
+show around the line that caused the error.
+
+- __emit_module__
+
+This specifies which module to use for custom output behaviour.
+
+You can chain multiple modules by specifying a line in the config for each
+module you'd like used:
+
+    emit_module A::Module
+    emit_module Another::Module
+    emit_module Yet::Another::Module
+
+If none are specified, or all that are specified fail, the default behaviour
+is to log the prepared message at the INFO level via `$c->log()`.
+
+For details on how to implement a custom emitter see ["CUSTOM EMIT CLASSES"](#CUSTOM EMIT CLASSES)
+in this documentation.
+
+- __always_log__
+
+The default plugin behaviour when using one or more emitter modules is to
+suppress the _info_ log message if one or more of them succeeded.
+
+If you wish to log the information, via `$c->log()` then set this value
+to 1.
+
+- __include_session__
+
+The default behaviour is to suppress potentially sensitive and revealing
+session-data in the error report.
+
+If you feel that this information is useful in your investigations set the
+value to _true_.
+
+When set to 1 the report will include a `Data::Dump::pp()` representation of
+the request's session. 
+
+- __user_identified_by__
+
+If there's a logged-in user use the specified value as the method to identify
+the user.
+
+If the specified value is invalid the module defaults to using _id_.
+
+If unspecified the value defaults to _id_.
+
+# STACKTRACE IN REPORTS WHEN NOT RUNNING IN DEBUG MODE
+
+It is possible to run your application in non-Debug mode, and still have
+errors reported with a stack-trace.
+
+Include the StackTrace and ErrorCatcher plugins in MyApp.pm:
+
+    use Catalyst qw<
+      ErrorCatcher
+      StackTrace
+    >;
+
+Set up your `myapp.conf` to include the following:
+
+    <stacktrace>
+      enable      1
+    </stacktrace>
+
+    <Plugin::ErrorCatcher>
+      enable      1
+      # include other options here
+    <Plugin::ErrorCatcher>
+
+Any exceptions should now show your user the _"Please come back later"_
+screen whilst still capturing and emitting a report with stack-trace.
+
+# PROVIDED EMIT CLASSES
+
+## Catalyst::Plugin::ErrorCatcher::Email
+
+This module uses [MIME::Lite](http://search.cpan.org/perldoc?MIME::Lite) to send the prepared output to a specified
+email address.
+
+See [Catalyst::Plugin::ErrorCatcher::Email](http://search.cpan.org/perldoc?Catalyst::Plugin::ErrorCatcher::Email) for usage and configuration
+details.
+
+# CUSTOM EMIT CLASSES
+
+A custom emit class takes the following format:
+
+    package A::Module;
+    # vim: ts=8 sts=4 et sw=4 sr sta
+    use strict;
+    use warnings;
+    
+
+    sub emit {
+      my ($class, $c, $output) = @_;
+    
+
+      $c->log->info(
+        'IGNORING OUTPUT FROM Catalyst::Plugin::ErrorCatcher'
+      );
+    
+
+      return;
+    }
+    
+
+    1;
+    __END__
+
+The only requirement is that you have a sub called `emit`.
+
+`Catalyst::Plugin::ErrorCatcher` passes the following parameters in the call
+to `emit()`:
+
+- __$class__
+
+The package name
+
+- __$c__
+
+A [Context](http://search.cpan.org/perldoc?Catalyst::Manual::Intro#Context) object
+
+- __$output__
+
+The processed output from `Catalyst::Plugin::ErrorCatcher`
+
+If you want to use the original error message you should use:
+
+    my @error = @{ $c->error };
+
+You may use and abuse any Catalyst methods, or other Perl modules as you see
+fit.
+
+# KNOWN ISSUES
+
+The test-suite coverage is quite low.
+
+# SEE ALSO
+
+[Catalyst](http://search.cpan.org/perldoc?Catalyst),
+[Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace)
+
+# THANKS
+
+The authors of [Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace), from which a lot of
+code was used.
+
+Ash Berlin for guiding me in the right direction after a known hacky first
+implementation.
+
+# AUTHOR
+
+Chisel <chisel@chizography.net>
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2011 by Chisel Wright.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
