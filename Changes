@@ -6,6 +6,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
   - (author) update dzil config with current preferred preferences
   - (author) Copy README.mkdn to root on a 'dzil build'
   - Error Cleanup: foreign key constraint violation (Pg)
+  - Error Cleanup: transaction aborted (Pg)
 
 0.0.8.9   2011-07-18 17:26:58 Europe/London
   - drop Class::Data::Accessor in favour of Catalyst::ClassData

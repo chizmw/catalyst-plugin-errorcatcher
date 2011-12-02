@@ -22,7 +22,12 @@ my @test_cases = (
     {
         original    => qq{Error: encountered object 'DBIx::Class::AuditLog::delete(): DBI Exception: DBD::Pg::st execute failed: ERROR:  update or delete on table "TheTable" violates foreign key constraint "foo_fkey" on table "fkey_table"\nDETAIL:  Key (id, thing_id)=(1, 5) is still referenced from table "fkey_table". [for Statement "DELETE FROM public.thingy WHERE ( id = ? )" with ParamValues: 1='1']},
         cleaned     => q{Foreign key constraint violation: TheTable -> fkey_table [foo_fkey]},
-    }
+    },
+
+    {
+        original    => q{Error: DBIx::Class::AuditLog::update(): DBI Exception: DBD::Pg::st execute failed: ERROR:  current transaction is aborted, commands ignored until end of transaction block [for Statement "INSERT INTO some.table ( col1, col2 ) VALUES ( ?, ? ) RETURNING id" with ParamValues: 1='one', 2='two'] at /opt/someapp/script/lib/SomeModule line 69},
+        cleaned     => q{current transaction is aborted, commands ignored until end of transaction block},
+    },
 );
 
 foreach my $test (@test_cases) {
