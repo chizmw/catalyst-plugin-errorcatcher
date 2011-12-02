@@ -28,6 +28,4 @@ sub tidy_message {
 }
 
 1;
-
-
-
+# ABSTRACT: cleanup transaction aborted messages from Pg

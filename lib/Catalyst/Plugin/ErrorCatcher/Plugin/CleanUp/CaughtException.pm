@@ -25,3 +25,4 @@ sub tidy_message {
 }
 
 1;
+# ABSTRACT: cleanup caught exception messages from Pg

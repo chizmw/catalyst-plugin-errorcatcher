@@ -29,5 +29,4 @@ sub tidy_message {
 }
 
 1;
-
-
+# ABSTRACT: cleanup foreign key violation messages from Pg

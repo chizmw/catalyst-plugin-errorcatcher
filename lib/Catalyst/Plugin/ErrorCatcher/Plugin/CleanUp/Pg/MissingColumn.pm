@@ -23,4 +23,4 @@ sub tidy_message {
 }
 
 1;
-
+# ABSTRACT: cleanup column XXX does not exist messages from Pg

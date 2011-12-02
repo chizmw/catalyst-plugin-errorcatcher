@@ -24,3 +24,4 @@ sub tidy_message {
 }
 
 1;
+# ABSTRACT: cleanup txn_do messages from Pg
