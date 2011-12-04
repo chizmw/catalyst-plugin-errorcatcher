@@ -1,6 +1,7 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - Replace deprecated KwaliteeTests plugin
 
 0.0.8.10  2011-12-02 22:57:59 Europe/London
   - RT#72781: emit referer and GET/POST parameter data
