@@ -431,13 +431,13 @@ sub _prepare_message {
         }
     }
 
-    my $params; # share with GET and POST output
+    my $params; # share with body-param and query-param output
     append_feedback_emptyline(\$feedback);
-    # output any GET params
-    append_output_params(\$feedback, 'GET', $c->request->query_parameters);
+    # output any query params
+    append_output_params(\$feedback, 'QUERY', $c->request->query_parameters);
 
-    # output any POST params
-    append_output_params(\$feedback, 'POST', $c->request->body_parameters);
+    # output any body params
+    append_output_params(\$feedback, 'BODY', $c->request->body_parameters);
 
     if ('ARRAY' eq ref($c->_errorcatcher)) {
         # push on information and context

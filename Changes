@@ -1,6 +1,7 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+  - Replace GET/POST with QUERY/BODY
   - Replace deprecated KwaliteeTests plugin
 
 0.0.8.10  2011-12-02 22:57:59 Europe/London
