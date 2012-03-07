@@ -359,7 +359,7 @@ sub _has_param_section {
     like(
         shift,
         qr{Params \(${type}\):},
-        'QUERY params block exists'
+        "$type params block exists"
     );
 }
 sub _has_keys_for_section {
