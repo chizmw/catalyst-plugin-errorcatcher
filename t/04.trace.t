@@ -328,7 +328,7 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     _has_value_for_key( 'BODY', 'long_text', 'kangarookangarookangarookangarookangaroo...[truncated]', $ec_msg);
     _has_value_for_key('QUERY', 'fruit',     'bananabananabananabananabananabananabana...[truncated]', $ec_msg);
     _has_value_for_key('QUERY', 'integer',   69, $ec_msg);
-    _has_value_for_key('QUERY', 'evil',      'two\nlines', $ec_msg);
+    _has_value_for_key('QUERY', 'evil',      'two\r\nlines', $ec_msg);
 }
 
 # helper methods for RT-72781 testing
