@@ -737,7 +737,16 @@ fit.
 
 =head1 KNOWN ISSUES
 
-The test-suite coverage is quite low.
+=over 4
+
+=item BODY tests failing (Catalyst >=5.90008)
+
+Summary: https://github.com/chiselwright/catalyst-plugin-errorcatcher/pull/1
+
+Bug report: https://rt.cpan.org/Public/Bug/Display.html?id=75607
+
+=back
+
 
 =head1 SEE ALSO
 
