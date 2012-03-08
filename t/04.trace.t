@@ -321,14 +321,14 @@ TestApp->config->{"Plugin::ErrorCatcher"}{enable} = 1;
     _has_keys_for_section('BODY', [qw(image_gif image_png long_text pdf_file normal evil)], $ec_msg);
 
     # check the values look sane
-    _has_value_for_key( 'BODY', 'image_gif', 'image/gif', $ec_msg);
-    _has_value_for_key( 'BODY', 'image_png', 'image/x-png', $ec_msg);
-    _has_value_for_key( 'BODY', 'pdf_file',  'application/pdf', $ec_msg);
-    _has_value_for_key( 'BODY', 'normal',    'short_thing', $ec_msg);
-    _has_value_for_key( 'BODY', 'long_text', 'kangarookangarookangarookangarookangaroo...[truncated]', $ec_msg);
-    _has_value_for_key('QUERY', 'fruit',     'bananabananabananabananabananabananabana...[truncated]', $ec_msg);
-    _has_value_for_key('QUERY', 'integer',   69, $ec_msg);
-    _has_value_for_key('QUERY', 'evil',      'two\nlines', $ec_msg);
+    _has_value_for_key( 'BODY', 'image_gif', qr{image/gif}, $ec_msg);
+    _has_value_for_key( 'BODY', 'image_png', qr{image/x-png}, $ec_msg);
+    _has_value_for_key( 'BODY', 'pdf_file',  qr{application/pdf}, $ec_msg);
+    _has_value_for_key( 'BODY', 'normal',    qr{short_thing}, $ec_msg);
+    _has_value_for_key( 'BODY', 'long_text', qr{kangarookangarookangarookangarookangaroo\.\.\.\[truncated\]}, $ec_msg);
+    _has_value_for_key('QUERY', 'fruit',     qr{bananabananabananabananabananabananabana\.\.\.\[truncated\]}, $ec_msg);
+    _has_value_for_key('QUERY', 'integer',   qr{69}, $ec_msg);
+    _has_value_for_key('QUERY', 'evil',      qr{two(?:\\r)?\\nlines}, $ec_msg);
 }
 
 # helper methods for RT-72781 testing
@@ -389,7 +389,7 @@ sub _has_value_for_key {
             .+?                     # non-greedy anything-ness
             ^\s+\Q$key\E:           # the line with our key on it
             \s+                     # whitespace after the key label
-            \Q$value\E              # a specific value for the key
+            $value                  # a specific value for the key
             \s*$                    # optional whitespace up to the end of the line
             .+?                     # non-greedy anything-ness
             ^$                      # blank line at end of section
