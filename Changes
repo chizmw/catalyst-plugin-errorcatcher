@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.11  2012-03-08 21:50:09 UTC
   - Replace GET/POST with QUERY/BODY
   - Replace deprecated KwaliteeTests plugin
   - resolve issues with CRLF line-endings
