@@ -352,7 +352,12 @@ sub _has_QUERY_output {
     _has_param_section('QUERY',@_);
 }
 sub _has_BODY_output {
-    _has_param_section('BODY',@_);
+    SKIP: {
+        skip 'RT#75607 body_parameters overwritten', 1
+            if _skip_for_RT75607();
+
+        _has_param_section('BODY',@_);
+    }
 }
 sub _has_param_section {
     my $type = shift;
@@ -366,36 +371,54 @@ sub _has_keys_for_section {
     my ($type, $keys, $msg) = @_;
     return
         unless (ref $keys eq 'ARRAY');
-    foreach my $key (@{$keys}) {
+    SKIP: {
+        skip 'RT#75607 body_parameters overwritten', scalar @{$keys}
+            if _skip_for_RT75607();
+
+        foreach my $key (@{$keys}) {
+            like(
+                $msg,
+                qr{
+                    Params\s+\(\Q$type\E\): # section header
+                    .+?                     # non-greedy anything-ness
+                    ^\s+\Q$key\E:.+?$       # the line with our key on it
+                    .+?                     # non-greedy anything-ness
+                    ^$                      # blank line at end of section
+                }xms,
+                "'$key' exists in $type section"
+            );
+        }
+    }
+}
+sub _has_value_for_key {
+    my ($type, $key, $value, $msg) = @_;
+    SKIP: {
+        skip 'RT#75607 body_parameters overwritten', 1
+            if _skip_for_RT75607();
+
         like(
             $msg,
             qr{
                 Params\s+\(\Q$type\E\): # section header
                 .+?                     # non-greedy anything-ness
-                ^\s+\Q$key\E:.+?$       # the line with our key on it
+                ^\s+\Q$key\E:           # the line with our key on it
+                \s+                     # whitespace after the key label
+                $value                  # a specific value for the key
+                \s*$                    # optional whitespace up to the end of the line
                 .+?                     # non-greedy anything-ness
                 ^$                      # blank line at end of section
             }xms,
-            "'$key' exists in $type section"
+            "'$key' has value '$value' in $type section"
         );
     }
 }
-sub _has_value_for_key {
-    my ($type, $key, $value, $msg) = @_;
-    like(
-        $msg,
-        qr{
-            Params\s+\(\Q$type\E\): # section header
-            .+?                     # non-greedy anything-ness
-            ^\s+\Q$key\E:           # the line with our key on it
-            \s+                     # whitespace after the key label
-            $value                  # a specific value for the key
-            \s*$                    # optional whitespace up to the end of the line
-            .+?                     # non-greedy anything-ness
-            ^$                      # blank line at end of section
-        }xms,
-        "'$key' has value '$value' in $type section"
-    );
+
+# see here for details:
+#  https://rt.cpan.org/Public/Bug/Display.html?id=75607
+sub _skip_for_RT75607 {
+    use version;
+    my $version = version->declare(Catalyst->VERSION);
+    return ($version >= qv("v5.90009") and $version <= qv("v5.90010"));
 }
 
 done_testing;
