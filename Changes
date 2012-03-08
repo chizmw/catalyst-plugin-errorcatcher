@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.12  2012-03-08 23:41:37 UTC
   - Extend version affected by RT#75607
 
 0.0.8.11  2012-03-08 21:50:09 UTC
