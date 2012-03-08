@@ -761,6 +761,10 @@ code was used.
 Ash Berlin for guiding me in the right direction after a known hacky first
 implementation.
 
+=head1 CONTRIBUTORS
+
+Fitz Elliot L<https://github.com/felliott/>
+
 =cut
 
 # vim: ts=8 sts=4 et sw=4 sr sta
