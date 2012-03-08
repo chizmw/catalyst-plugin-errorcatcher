@@ -418,7 +418,7 @@ sub _has_value_for_key {
 sub _skip_for_RT75607 {
     use version;
     my $version = version->declare(Catalyst->VERSION);
-    return ($version >= qv("v5.90009") and $version <= qv("v5.90010"));
+    return ($version >= qv("v5.90009") and $version <= qv("v5.90011"));
 }
 
 done_testing;
