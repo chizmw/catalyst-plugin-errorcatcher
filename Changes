@@ -3,6 +3,8 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 {{$NEXT}}
   - Replace GET/POST with QUERY/BODY
   - Replace deprecated KwaliteeTests plugin
+  - resolve issues with CRLF line-endings
+  - Skip tests affected by RT#75607
 
 0.0.8.10  2011-12-02 22:57:59 Europe/London
   - RT#72781: emit referer and GET/POST parameter data

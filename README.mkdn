@@ -4,7 +4,7 @@ Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewher
 
 # VERSION
 
-version 0.0.8.10
+version 0.0.8.11
 
 # SYNOPSIS
 
@@ -175,7 +175,11 @@ fit.
 
 # KNOWN ISSUES
 
-The test-suite coverage is quite low.
+- BODY tests failing (Catalyst >=5.90008)
+
+Summary: https://github.com/chiselwright/catalyst-plugin-errorcatcher/pull/1
+
+Bug report: https://rt.cpan.org/Public/Bug/Display.html?id=75607
 
 # SEE ALSO
 
@@ -189,6 +193,10 @@ code was used.
 
 Ash Berlin for guiding me in the right direction after a known hacky first
 implementation.
+
+# CONTRIBUTORS
+
+Fitz Elliot [https://github.com/felliott/](https://github.com/felliott/)
 
 # AUTHOR
 
