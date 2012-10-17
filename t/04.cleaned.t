@@ -28,6 +28,12 @@ my @test_cases = (
         original    => q{Error: DBIx::Class::AuditLog::update(): DBI Exception: DBD::Pg::st execute failed: ERROR:  current transaction is aborted, commands ignored until end of transaction block [for Statement "INSERT INTO some.table ( col1, col2 ) VALUES ( ?, ? ) RETURNING id" with ParamValues: 1='one', 2='two'] at /opt/someapp/script/lib/SomeModule line 69},
         cleaned     => q{current transaction is aborted, commands ignored until end of transaction block},
     },
+
+    {
+        original    => q{Error: DBIx::Class::Relationship::CascadeActions::update(): DBI Exception: DBD::Pg::st execute failed: ERROR:  duplicate key value violates unique constraint "my_really_unique_constraint"
+DETAIL:  Key (field_wot_is_unique)=(OHNOESADUPEVALUE) already exists. [for Statement "UPDATE some.table SET something=something" with ParamValues: 5='OHNOESADUPEVALUE', 9='2'] at /opt/someapp/script/lib/SomeModule line 2666},
+        cleaned     => q{Unique constraint violation: field_wot_is_unique -> OHNOESADUPEVALUE [my_really_unique_constraint]},
+    },
 );
 
 foreach my $test (@test_cases) {
