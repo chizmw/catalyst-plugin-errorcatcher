@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 sub tidy_message {
-    my $plugin      = shift;
-    my $errstr_ref  = shift;
+    my $plugin     = shift;
+    my $errstr_ref = shift;
 
     ${$errstr_ref} =~ s{
         Caught\s+exception\s+in\s+
@@ -25,4 +25,5 @@ sub tidy_message {
 }
 
 1;
+
 # ABSTRACT: cleanup caught exception messages from Pg

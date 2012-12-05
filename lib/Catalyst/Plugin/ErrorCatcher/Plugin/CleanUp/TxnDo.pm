@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 sub tidy_message {
-    my $plugin      = shift;
-    my $errstr_ref  = shift;
+    my $plugin     = shift;
+    my $errstr_ref = shift;
 
     # DBIx::Class::Schema::txn_do(): ... ... line XX
     ${$errstr_ref} =~ s{
@@ -24,4 +24,5 @@ sub tidy_message {
 }
 
 1;
+
 # ABSTRACT: cleanup txn_do messages from Pg

@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Email;
+
 # ABSTRACT: an email emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;
@@ -20,14 +21,15 @@ sub emit {
         To      => $config->{to},
         Subject => $config->{subject},
 
-        Type    => 'TEXT',
-        Data    => $output,
+        Type => 'TEXT',
+        Data => $output,
     );
+
     # add the optional Cc value
     if (exists $config->{cc}) {
         $msg_config{Cc} = $config->{cc};
     }
-    $msg = MIME::Lite->new( %msg_config );
+    $msg = MIME::Lite->new(%msg_config);
 
     # send the message
     _send_email($msg, $config);
@@ -60,26 +62,17 @@ sub _check_config {
     # (nifty idea suggested by pecastro)
     # only use them if we have a user subject *AND* they've asked us to work
     # the magic on it
-    if (
-           defined $config->{subject}
-        && $config->{use_tags}
-    ) {
-        $config->{subject} =
-            _parse_tags($c, $config->{subject});
+    if (defined $config->{subject}
+        && $config->{use_tags}) {
+        $config->{subject} = _parse_tags($c, $config->{subject});
     }
 
     # set a default Subject-Line
     if (not defined $config->{subject}) {
-        $config->{subject} =
-              q{Error Report for }
-            . $c->config->{name}
-        ;
+        $config->{subject} = q{Error Report for } . $c->config->{name};
         my $host = Sys::Hostname::hostname();
         if (defined $host) {
-            $config->{subject} .=
-                  q{ on }
-                . $host
-            ;
+            $config->{subject} .= q{ on } . $host;
         }
     }
 
@@ -100,17 +93,18 @@ sub _parse_tags {
     my $first_frame = $c->_errorcatcher_first_frame || {};
 
     my %tag_of = (
-        '%h' => sub{Sys::Hostname::hostname()||'UnknownHost'},
-        '%f' => sub{$first_frame->{file}||'UnknownFile'},
-        '%F' => sub{
-            my $val=$first_frame->{file}||'UnknownFile';
+        '%h' => sub { Sys::Hostname::hostname() || 'UnknownHost' },
+        '%f' => sub { $first_frame->{file}      || 'UnknownFile' },
+        '%F' => sub {
+            my $val = $first_frame->{file} || 'UnknownFile';
+
             # ideally replace with cross-platform directory separator
             return _munge_path($val);
         },
-        '%l' => sub{$first_frame->{line}||'UnknownLine'},
-        '%p' => sub{$first_frame->{pkg}||'UnknownPackage'},
-        '%V' => sub{$c->config->{version}||'UnknownVersion'},
-        '%n' => sub{$c->config->{name}||'UnknownAppName'},
+        '%l' => sub { $first_frame->{line}  || 'UnknownLine' },
+        '%p' => sub { $first_frame->{pkg}   || 'UnknownPackage' },
+        '%V' => sub { $c->config->{version} || 'UnknownVersion' },
+        '%n' => sub { $c->config->{name}    || 'UnknownAppName' },
     );
 
     foreach my $tag (keys %tag_of) {
@@ -121,15 +115,12 @@ sub _parse_tags {
 }
 
 sub _send_email {
-    my $msg = shift;
+    my $msg    = shift;
     my $config = shift;
 
     # if there are specific send options, use them
     if (exists $config->{send}{type} and exists $config->{send}{args}) {
-        $msg->send(
-            $config->{send}{type},
-            @{ $config->{send}{args} }
-        );
+        $msg->send($config->{send}{type}, @{ $config->{send}{args} });
         return;
     }
 
@@ -141,19 +132,19 @@ sub _send_email {
 
 sub _munge_path {
     my $path_string = shift;
-    my $path_spec = Path::Class::dir($path_string);
-    my $path_re = qr{^(?:lib|script)$};
-#
-#    return $path_string
-#        if not grep { /${path_re}/ } $path_spec->dir_list;
+    my $path_spec   = Path::Class::dir($path_string);
+    my $path_re     = qr{^(?:lib|script)$};
+    #
+    #    return $path_string
+    #        if not grep { /${path_re}/ } $path_spec->dir_list;
 
-    my @dirs = $path_spec->dir_list;
+    my @dirs     = $path_spec->dir_list;
     my @new_dirs = ();
 
     # work backwards through the path (it should be shorter)
     # pop of everything until we match or exhaust the list
     # (which we shouldn't because we already checked for a match)
-    while ( @dirs && $dirs[-1] !~ m/${path_re}/ ) {
+    while (@dirs && $dirs[-1] !~ m/${path_re}/) {
         unshift @new_dirs, pop @dirs;
     }
 

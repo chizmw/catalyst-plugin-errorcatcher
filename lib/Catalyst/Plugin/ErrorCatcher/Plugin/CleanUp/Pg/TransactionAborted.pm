@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 sub tidy_message {
-    my $plugin      = shift;
-    my $errstr_ref  = shift;
+    my $plugin     = shift;
+    my $errstr_ref = shift;
 
     #  ERROR:  current transaction is aborted, commands ignored until end of
     #  transaction block [for Statement
@@ -28,4 +28,5 @@ sub tidy_message {
 }
 
 1;
+
 # ABSTRACT: cleanup transaction aborted messages from Pg

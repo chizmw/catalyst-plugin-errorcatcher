@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 sub tidy_message {
-    my $plugin      = shift;
-    my $errstr_ref  = shift;
+    my $plugin     = shift;
+    my $errstr_ref = shift;
 
     # column XXX does not exist
     ${$errstr_ref} =~ s{
@@ -23,4 +23,5 @@ sub tidy_message {
 }
 
 1;
+
 # ABSTRACT: cleanup column XXX does not exist messages from Pg

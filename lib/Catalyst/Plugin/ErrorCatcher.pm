@@ -1,7 +1,8 @@
 package Catalyst::Plugin::ErrorCatcher;
+
 # ABSTRACT: Catch application errors and emit them somewhere
 use Moose;
-    with 'Catalyst::ClassData';
+with 'Catalyst::ClassData';
 use 5.008004;
 use File::Type;
 use IO::File;
@@ -24,7 +25,7 @@ sub setup {
     $c->maybe::next::method(@_);
 
     # store the whole config (so plugins have a method to access it)
-    $c->_errorcatcher_c_cfg( $c->config );
+    $c->_errorcatcher_c_cfg($c->config);
 
     # get our plugin config
     my $config = $c->config->{'Plugin::ErrorCatcher'} || {};
@@ -35,12 +36,12 @@ sub setup {
     $config->{always_log}         ||= 0;
     $config->{include_session}    ||= 0;
     $config->{user_identified_by} ||= 'id';
-    
+
     # start with an empty hash
     $c->_errorcatcher_emitter_of({});
 
     # store our plugin config
-    $c->_errorcatcher_cfg( $config );
+    $c->_errorcatcher_cfg($config);
 
     # some annoying emitters want a new() to be called
     $c->emitters_init;
@@ -50,7 +51,7 @@ sub setup {
 
 # implementation borrowed from ABERLIN
 sub finalize_error {
-    my $c = shift;
+    my $c    = shift;
     my $conf = $c->_errorcatcher_cfg;
 
     # finalize_error is only called when we have $c->error, so no need to test
@@ -64,7 +65,7 @@ sub finalize_error {
     if (
         # the config file insists we DO NOT run
         defined $conf->{enable} && not $conf->{enable}
-    ) {
+        ) {
         return;
     }
 
@@ -72,10 +73,11 @@ sub finalize_error {
     if (
         # the config file insists we run
         defined $conf->{enable} && $conf->{enable}
-            or
+        or
+
         # we're in debug mode
         !defined $conf->{enable} && $c->debug
-    ) {
+        ) {
         $c->my_finalize_error;
     }
 
@@ -93,14 +95,15 @@ sub my_finalize_error {
 sub emitters_init {
     my $c = shift;
 
-    if (defined (my $emit_list = $c->_errorcatcher_cfg->{emit_module})) {
+    if (defined(my $emit_list = $c->_errorcatcher_cfg->{emit_module})) {
         my @emit_list;
+
         # one item or a list?
         if (defined ref($emit_list) and 'ARRAY' eq ref($emit_list)) {
-            @emit_list = @{ $emit_list };
+            @emit_list = @{$emit_list};
         }
         elsif (not ref($emit_list)) {
-            @emit_list = ( $emit_list );
+            @emit_list = ($emit_list);
         }
 
         foreach my $emitter (@emit_list) {
@@ -110,10 +113,10 @@ sub emitters_init {
 }
 
 sub _require_and_new {
-    my $c = shift;
+    my $c            = shift;
     my $emitter_name = shift;
-    my $output = shift;
-    my $conf = $c->_errorcatcher_cfg;
+    my $output       = shift;
+    my $conf         = $c->_errorcatcher_cfg;
 
     # make sure our emitter loads
     eval "require $emitter_name";
@@ -121,25 +124,23 @@ sub _require_and_new {
         $c->log->error($@);
         return;
     }
+
     # make sure it "can" new()
     if ($emitter_name->can('new')) {
         my ($e, $e_cfg);
-        $e_cfg = $c->config->{$emitter_name} || {}; 
+        $e_cfg = $c->config->{$emitter_name} || {};
 
-        eval {
-            $e = $emitter_name->new({c=>$c});
-        };
+        eval { $e = $emitter_name->new({ c => $c }); };
         if ($@) {
             $c->log->error($@);
             return;
         }
+
         # store the object
         $c->_errorcatcher_emitter_of->{$emitter_name} = $e;
 
-        $c->log->debug(
-                $emitter_name
-            . q{: initialised without errors}
-        ) if $conf->{verbose} > 1;
+        $c->log->debug($emitter_name . q{: initialised without errors})
+            if $conf->{verbose} > 1;
 
         # we are happy when they emitted without incident
         return 1;
@@ -148,75 +149,64 @@ sub _require_and_new {
     # default is, "no we didn't mit anything"
     return;
 }
+
 sub _emit_message {
-    my $c = shift;
-    my $conf = $c->_errorcatcher_cfg;
+    my $c             = shift;
+    my $conf          = $c->_errorcatcher_cfg;
     my $emitted_count = 0;
 
     return
         unless defined($c->_errorcatcher_msg);
 
     # use a custom emit method?
-    if (defined (my $emit_list = $c->_errorcatcher_cfg->{emit_module})) {
+    if (defined(my $emit_list = $c->_errorcatcher_cfg->{emit_module})) {
         my @emit_list;
+
         # one item or a list?
         if (defined ref($emit_list) and 'ARRAY' eq ref($emit_list)) {
-            @emit_list = @{ $emit_list };
+            @emit_list = @{$emit_list};
         }
         elsif (not ref($emit_list)) {
-            @emit_list = ( $emit_list );
+            @emit_list = ($emit_list);
         }
 
         foreach my $emitter (@emit_list) {
-            $c->log->debug(
-                  q{Trying to use custom emitter: }
-                . $emitter
-            ) if $conf->{verbose};
+            $c->log->debug(q{Trying to use custom emitter: } . $emitter)
+                if $conf->{verbose};
 
             # require, and call methods
-            my $emitted_ok = $c->_require_and_emit(
-                $emitter, $c->_errorcatcher_msg
-            );
+            my $emitted_ok =
+                $c->_require_and_emit($emitter, $c->_errorcatcher_msg);
             if ($emitted_ok) {
                 $emitted_count++;
-                $c->log->debug(
-                      $emitter
-                    . q{: OK}
-                ) if $conf->{verbose};
+                $c->log->debug($emitter . q{: OK}) if $conf->{verbose};
             }
             else {
-                $c->log->debug(
-                      $emitter
-                    . q{: FAILED}
-                ) if $conf->{verbose};
+                $c->log->debug($emitter . q{: FAILED}) if $conf->{verbose};
             }
         }
     }
 
     # by default use $c->log
-    if (
-        not $emitted_count
-            or
-        $c->_errorcatcher_cfg->{always_log}
-    ) {
-        $c->log->info(
-            $c->_errorcatcher_msg
-        );
+    if (not $emitted_count
+        or $c->_errorcatcher_cfg->{always_log}) {
+        $c->log->info($c->_errorcatcher_msg);
     }
 
     return;
 }
 
 sub _require_and_emit {
-    my $c = shift;
+    my $c            = shift;
     my $emitter_name = shift;
-    my $output = shift;
-    my $conf = $c->_errorcatcher_cfg;
+    my $output       = shift;
+    my $conf         = $c->_errorcatcher_cfg;
     my $emitter;
 
     # if we've preloaded an emitter [because it nas new()]
     # call that object
-    if (defined (my $e=$c->_errorcatcher_emitter_of->{$emitter_name})) {
+    if (defined(my $e = $c->_errorcatcher_emitter_of->{$emitter_name})) {
+
         # make sure it's "the right thing"
         if ($emitter_name eq ref($e)) {
             $emitter = $e;
@@ -229,6 +219,7 @@ sub _require_and_emit {
     # if we haven't set the emitter (from a preloaded object)
     # require it ...
     if (not defined $emitter) {
+
         # make sure our emitter loads
         eval "require $emitter_name";
         if ($@) {
@@ -241,29 +232,21 @@ sub _require_and_emit {
 
     # make sure it "can" emit
     if ($emitter->can('emit')) {
-        eval {
-            $emitter->emit(
-                $c, $output
-            );
-        };
+        eval { $emitter->emit($c, $output); };
         if ($@) {
             $c->log->error($@);
             return;
         }
 
-        $c->log->debug(
-                $emitter_name
-            . q{: emitted without errors}
-        ) if $conf->{verbose} > 1;
+        $c->log->debug($emitter_name . q{: emitted without errors})
+            if $conf->{verbose} > 1;
 
         # we are happy when they emitted without incident
         return 1;
     }
     else {
-        $c->log->debug(
-                $emitter_name
-            . q{ does not have an emit() method}
-        ) if $conf->{verbose};
+        $c->log->debug($emitter_name . q{ does not have an emit() method})
+            if $conf->{verbose};
     }
 
     # default is, "no we didn't emit anything"
@@ -292,12 +275,11 @@ sub _cleaned_error_message {
     return $error_message;
 }
 
-
 sub append_feedback {
     my $fb_ref = shift;
     my $data   = shift;
     $$fb_ref ||= q{};
-    $$fb_ref  .= $data . qq{\n};
+    $$fb_ref .= $data . qq{\n};
 }
 
 sub append_feedback_emptyline {
@@ -305,19 +287,17 @@ sub append_feedback_emptyline {
 }
 
 sub append_feedback_keyvalue {
+
     # don't add undefined values
     return
         unless defined $_[2];
     my $padding = $_[3] || 8;
-    append_feedback(
-        $_[0],
-        sprintf("%${padding}s: %s", $_[1], $_[2])
-    );
+    append_feedback($_[0], sprintf("%${padding}s: %s", $_[1], $_[2]));
     return;
 }
 
 sub sanitise_param {
-    my $value   = shift;
+    my $value = shift;
 
     # stolen from Data::Dumper::qquote
     my $dumped_value;
@@ -339,8 +319,8 @@ sub sanitise_param {
         if (length($value) < 40);
 
     # make a guess at a possible filetype
-    my $ft      = File::Type->new();
-    my $type    = $ft->checktype_contents( $value );
+    my $ft   = File::Type->new();
+    my $type = $ft->checktype_contents($value);
 
     # if our mimetype isn't application/octet-stream just report what was
     # submitted
@@ -352,25 +332,27 @@ sub sanitise_param {
     # we could make guesses if we're really text/plain but for now
     # ... we're long, return a substring of ourseld
     # (if this gives troublesome results we'll tweak accordingly)
-    return sprintf(
-        '%s...[truncated]',
-        substr($dumped_value, 0, 40)
-    );
+    return sprintf('%s...[truncated]', substr($dumped_value, 0, 40));
 }
 
 sub append_output_params {
     my $fb_ref = shift;
-    my ($label,$params) = @_;
+    my ($label, $params) = @_;
     return unless keys %$params;
-    # work out the longest key
-    # (http://www.webmasterkb.com/Uwe/Forum.aspx/perl/7596/Maximum-length-of-hash-key)
-    my $l; $l|=$_ foreach keys %$params; $l=length $l;
+
+# work out the longest key
+# (http://www.webmasterkb.com/Uwe/Forum.aspx/perl/7596/Maximum-length-of-hash-key)
+    my $l;
+    $l |= $_ foreach keys %$params;
+    $l = length $l;
+
     # give the next set of output a header
     append_feedback($fb_ref, "Params ($label):");
+
     # output the key-value pairs
     foreach my $k (sort keys %{$params}) {
         my $processed_value = sanitise_param($params->{$k});
-        append_feedback_keyvalue($fb_ref, $k, $processed_value, $l+2);
+        append_feedback_keyvalue($fb_ref, $k, $processed_value, $l + 2);
     }
     append_feedback_emptyline($fb_ref);
 }
@@ -383,11 +365,12 @@ sub _prepare_message {
     for my $error (@{ $c->error }) {
         $full_error .= qq{$error\n\n};
     }
+
     # trim out some extra fluff from the full message
     $parsed_error = _cleaned_error_message($full_error);
 
     # A title for the feedback
-    append_feedback(\$feedback, qq{Exception caught:} );
+    append_feedback(\$feedback, qq{Exception caught:});
     append_feedback_emptyline(\$feedback);
 
     # the (parsed) error
@@ -401,26 +384,25 @@ sub _prepare_message {
     $feedback .= "  Client: " . $c->request->address
         if (defined $c->request->address);
     if (defined $c->request->hostname) {
-        $feedback .=        " (" . $c->request->hostname . ")\n"
+        $feedback .= " (" . $c->request->hostname . ")\n";
     }
     else {
         $feedback .= "\n";
     }
 
-    append_feedback_keyvalue(\$feedback, 'Agent',   $c->request->user_agent);
-    append_feedback_keyvalue(\$feedback, 'URI',    ($c->request->uri    || q{n/a}));
-    append_feedback_keyvalue(\$feedback, 'Method', ($c->request->method || q{n/a}));
+    append_feedback_keyvalue(\$feedback, 'Agent', $c->request->user_agent);
+    append_feedback_keyvalue(\$feedback, 'URI', ($c->request->uri || q{n/a}));
+    append_feedback_keyvalue(\$feedback, 'Method',
+        ($c->request->method || q{n/a}));
     append_feedback_keyvalue(\$feedback, 'Referer', $c->request->referer);
 
     # TODO use append_...() method
-    my $user_identifier_method =
-        $c->_errorcatcher_cfg->{user_identified_by};
+    my $user_identifier_method = $c->_errorcatcher_cfg->{user_identified_by};
+
     # if we have a logged-in user, add to the feedback
-    if (
-           $c->can('user_exists')
+    if (   $c->can('user_exists')
         && $c->user_exists
-        && $c->user->can($user_identifier_method)
-    ) {
+        && $c->user->can($user_identifier_method)) {
         $feedback .= "    User: " . $c->user->$user_identifier_method;
         $feedback .= " [$user_identifier_method]";
         if (ref $c->user) {
@@ -431,8 +413,9 @@ sub _prepare_message {
         }
     }
 
-    my $params; # share with body-param and query-param output
+    my $params;    # share with body-param and query-param output
     append_feedback_emptyline(\$feedback);
+
     # output any query params
     append_output_params(\$feedback, 'QUERY', $c->request->query_parameters);
 
@@ -440,11 +423,13 @@ sub _prepare_message {
     append_output_params(\$feedback, 'BODY', $c->request->body_parameters);
 
     if ('ARRAY' eq ref($c->_errorcatcher)) {
+
         # push on information and context
-        for my $frame ( @{$c->_errorcatcher} ) {
+        for my $frame (@{ $c->_errorcatcher }) {
+
             # clean up the common filename of
             # .../MyApp/script/../lib/...
-            if ( $frame->{file} =~ /../ ) {
+            if ($frame->{file} =~ /../) {
                 $frame->{file} =~ s{script/../}{};
             }
 
@@ -457,11 +442,9 @@ sub _prepare_message {
             my $pkg  = $frame->{pkg};
             my $line = $frame->{line};
             my $file = $frame->{file};
-            my $code_preview = _print_context(
-                $frame->{file},
-                $frame->{line},
-                $c->_errorcatcher_cfg->{context}
-            );
+            my $code_preview =
+                _print_context($frame->{file},
+                $frame->{line}, $c->_errorcatcher_cfg->{context});
 
             append_feedback_keyvalue(\$feedback, 'Package', $pkg);
             append_feedback_keyvalue(\$feedback, 'Line',    $line);
@@ -472,22 +455,23 @@ sub _prepare_message {
     }
     else {
         append_feedback_emptyline(\$feedback);
-        append_feedback(\$feedback, "Stack trace unavailable - use and enable Catalyst::Plugin::StackTrace");
+        append_feedback(\$feedback,
+"Stack trace unavailable - use and enable Catalyst::Plugin::StackTrace"
+        );
     }
 
     # RT-64492 - add session data if requested
-    if (
-        $c->_errorcatcher_cfg->{include_session}
-        and defined $c->session
-    ) {
+    if ($c->_errorcatcher_cfg->{include_session}
+        and defined $c->session) {
         eval { require Data::Dump };
-        if (my $e=$@) {
-            append_feedback(\$feedback, 'Session data requested but failed to require Data::Dump:');
+        if (my $e = $@) {
+            append_feedback(\$feedback,
+                'Session data requested but failed to require Data::Dump:');
             append_feedback(\$feedback, "  $e");
         }
         else {
             append_feedback(\$feedback, 'Session Data');
-            append_feedback(\$feedback,  Data::Dump::pp($c->session));
+            append_feedback(\$feedback, Data::Dump::pp($c->session));
         }
     }
 
@@ -509,50 +493,42 @@ sub _prepare_message {
 # we don't have to do much here now that we're relying on ::StackTrace to do
 # the work for us
 sub _keep_frames {
-    my $c = shift;
+    my $c    = shift;
     my $conf = $c->_errorcatcher_cfg;
     my $stacktrace;
 
-    eval {
-        $stacktrace = $c->_stacktrace;
-    };
+    eval { $stacktrace = $c->_stacktrace; };
 
     if (defined $stacktrace) {
-        $c->_errorcatcher( $stacktrace );
+        $c->_errorcatcher($stacktrace);
     }
     else {
-        $c->_errorcatcher( undef );
-        $c->log->debug(
-                __PACKAGE__
-            . q{ has no stack-trace information}
-        ) if $conf->{verbose} > 1;
+        $c->_errorcatcher(undef);
+        $c->log->debug(__PACKAGE__ . q{ has no stack-trace information})
+            if $conf->{verbose} > 1;
     }
     return;
 }
 
 # borrowed heavily from Catalyst::Plugin::StackTrace
 sub _print_context {
-    my ( $file, $linenum, $context ) = @_;
+    my ($file, $linenum, $context) = @_;
 
     my $code;
-    if ( -f $file ) {
+    if (-f $file) {
         my $start = $linenum - $context;
         my $end   = $linenum + $context;
         $start = $start < 1 ? 1 : $start;
-        if ( my $fh = IO::File->new( $file, 'r' ) ) {
+        if (my $fh = IO::File->new($file, 'r')) {
             my $cur_line = 0;
-            while ( my $line = <$fh> ) {
+            while (my $line = <$fh>) {
                 ++$cur_line;
                 last if $cur_line > $end;
                 next if $cur_line < $start;
                 my @tag = $cur_line == $linenum ? ('-->', q{}) : (q{   }, q{});
-                $code .= sprintf(
-                    '%s%5d: %s%s',
-                        $tag[0],
-                        $cur_line,
-                        $line ? $line : q{},
-                        $tag[1],
-                );
+                $code .= sprintf('%s%5d: %s%s',
+                    $tag[0], $cur_line, $line ? $line : q{},
+                    $tag[1],);
             }
         }
     }

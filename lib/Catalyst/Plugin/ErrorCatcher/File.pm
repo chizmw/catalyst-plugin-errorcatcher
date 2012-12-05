@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::File;
+
 # ABSTRACT: a file emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;
@@ -44,18 +45,13 @@ sub _check_config {
 }
 
 sub _write_file {
-    my $msg = shift;
+    my $msg    = shift;
     my $config = shift;
 
-    my $dt = DateTime->now;
+    my $dt        = DateTime->now;
     my $timestamp = $dt->strftime('%Y%m%d%H%M%S');
 
-    my $filename = file(
-        $config->{dir},
-          $config->{prefix}
-        . q{_}
-        . $timestamp
-    );
+    my $filename = file($config->{dir}, $config->{prefix} . q{_} . $timestamp);
 
     # make sure we don't overwrite existing files
     if (-e $filename) {
@@ -66,7 +62,7 @@ sub _write_file {
         $filename = "${filename}.${count}";
     }
 
-    write_file($filename.q{}, $msg);
+    write_file($filename . q{}, $msg);
     return;
 }
 

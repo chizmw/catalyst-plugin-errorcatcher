@@ -3,8 +3,8 @@ use strict;
 use warnings;
 
 sub tidy_message {
-    my $plugin      = shift;
-    my $errstr_ref  = shift;
+    my $plugin     = shift;
+    my $errstr_ref = shift;
 
     # update or delete on table "foo" violates foreign key constraint
     # "foobar_fkey" on table "baz"
@@ -33,5 +33,6 @@ sub tidy_message {
 }
 
 1;
+
 # ABSTRACT: cleanup foreign key violation messages from Pg
 
