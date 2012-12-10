@@ -4,7 +4,7 @@ Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewher
 
 # VERSION
 
-version 0.0.8.12
+version 0.0.8.13
 
 # SYNOPSIS
 
@@ -32,60 +32,60 @@ The plugin is configured in a similar manner to other Catalyst plugins:
 
 - __enable__
 
-Setting this to _true_ forces the module to work its voodoo.
+    Setting this to _true_ forces the module to work its voodoo.
 
-It's also enabled if the value is unset and you're running Catalyst in
-debug-mode.
+    It's also enabled if the value is unset and you're running Catalyst in
+    debug-mode.
 
 - __context__
 
-When there is stack-trace information to share, how many lines of context to
-show around the line that caused the error.
+    When there is stack-trace information to share, how many lines of context to
+    show around the line that caused the error.
 
-- __emit_module__
+- __emit\_module__
 
-This specifies which module to use for custom output behaviour.
+    This specifies which module to use for custom output behaviour.
 
-You can chain multiple modules by specifying a line in the config for each
-module you'd like used:
+    You can chain multiple modules by specifying a line in the config for each
+    module you'd like used:
 
-    emit_module A::Module
-    emit_module Another::Module
-    emit_module Yet::Another::Module
+        emit_module A::Module
+        emit_module Another::Module
+        emit_module Yet::Another::Module
 
-If none are specified, or all that are specified fail, the default behaviour
-is to log the prepared message at the INFO level via `$c->log()`.
+    If none are specified, or all that are specified fail, the default behaviour
+    is to log the prepared message at the INFO level via `$c->log()`.
 
-For details on how to implement a custom emitter see ["CUSTOM EMIT CLASSES"](#CUSTOM EMIT CLASSES)
-in this documentation.
+    For details on how to implement a custom emitter see ["CUSTOM EMIT CLASSES"](#CUSTOM EMIT CLASSES)
+    in this documentation.
 
-- __always_log__
+- __always\_log__
 
-The default plugin behaviour when using one or more emitter modules is to
-suppress the _info_ log message if one or more of them succeeded.
+    The default plugin behaviour when using one or more emitter modules is to
+    suppress the _info_ log message if one or more of them succeeded.
 
-If you wish to log the information, via `$c->log()` then set this value
-to 1.
+    If you wish to log the information, via `$c->log()` then set this value
+    to 1.
 
-- __include_session__
+- __include\_session__
 
-The default behaviour is to suppress potentially sensitive and revealing
-session-data in the error report.
+    The default behaviour is to suppress potentially sensitive and revealing
+    session-data in the error report.
 
-If you feel that this information is useful in your investigations set the
-value to _true_.
+    If you feel that this information is useful in your investigations set the
+    value to _true_.
 
-When set to 1 the report will include a `Data::Dump::pp()` representation of
-the request's session. 
+    When set to 1 the report will include a `Data::Dump::pp()` representation of
+    the request's session. 
 
-- __user_identified_by__
+- __user\_identified\_by__
 
-If there's a logged-in user use the specified value as the method to identify
-the user.
+    If there's a logged-in user use the specified value as the method to identify
+    the user.
 
-If the specified value is invalid the module defaults to using _id_.
+    If the specified value is invalid the module defaults to using _id_.
 
-If unspecified the value defaults to _id_.
+    If unspecified the value defaults to _id_.
 
 # STACKTRACE IN REPORTS WHEN NOT RUNNING IN DEBUG MODE
 
@@ -156,15 +156,15 @@ to `emit()`:
 
 - __$class__
 
-The package name
+    The package name
 
 - __$c__
 
-A [Context](http://search.cpan.org/perldoc?Catalyst::Manual::Intro#Context) object
+    A [Context](http://search.cpan.org/perldoc?Catalyst::Manual::Intro#Context) object
 
 - __$output__
 
-The processed output from `Catalyst::Plugin::ErrorCatcher`
+    The processed output from `Catalyst::Plugin::ErrorCatcher`
 
 If you want to use the original error message you should use:
 
@@ -177,9 +177,9 @@ fit.
 
 - BODY tests failing (Catalyst >=5.90008)
 
-Summary: https://github.com/chiselwright/catalyst-plugin-errorcatcher/pull/1
+    Summary: https://github.com/chiselwright/catalyst-plugin-errorcatcher/pull/1
 
-Bug report: https://rt.cpan.org/Public/Bug/Display.html?id=75607
+    Bug report: https://rt.cpan.org/Public/Bug/Display.html?id=75607
 
 # SEE ALSO
 
