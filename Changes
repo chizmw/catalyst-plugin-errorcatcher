@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.13  2012-12-10 23:32:27 Europe/London
  - Add cleanup for unique constraint violation (Pg)
 
 0.0.8.12  2012-03-08 23:41:37 UTC
