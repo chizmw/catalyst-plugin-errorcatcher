@@ -1,6 +1,7 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+ - Update bugtracker to point to github
 
 0.0.8.13  2012-12-10 23:32:27 Europe/London
  - Add cleanup for unique constraint violation (Pg)
