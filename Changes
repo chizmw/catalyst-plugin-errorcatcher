@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.14  2013-11-25 15:43:23 UTC
  - make path in test Win32 friendly
    http://www.cpantesters.org/cpan/report/47340104-6c16-1014-af5d-8b4ea133ff58
  - Update bugtracker to point to github
