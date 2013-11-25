@@ -8,6 +8,7 @@ BEGIN {
 }
 
 use Test::More 0.92;
+use File::Spec::Functions;
 use Sys::Hostname;
 
 BEGIN {
@@ -92,7 +93,7 @@ use Catalyst::Test 'TestApp';
     my @subject_line_tests = (
         { sub => 'Host: %h',    res => qq{Host: $host} },
         { sub => 'Line: %l',    res => qq{Line: 30} },
-        { sub => 'File: %F',    res => qq{File: TestApp/Controller/Foo.pm} },
+        { sub => 'File: %F',    res => qq{File: } . catfile(qw(TestApp Controller Foo.pm)) },
         { sub => 'Package: %p', res => qq{Package: TestApp::Controller::Foo} },
         { sub => 'Version: %V', res => qq{Version: v0.0.4} },
         { sub => 'Name: %n',    res => qq{Name: TestApp} },

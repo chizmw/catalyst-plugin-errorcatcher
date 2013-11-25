@@ -4,7 +4,7 @@ Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewher
 
 # VERSION
 
-version 0.0.8.13
+version 0.0.8.14
 
 # SYNOPSIS
 
