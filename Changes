@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.15  2013-11-29 11:12:35 UTC
  - update tests to not actually use MIME::Lite::send
    we don't really need to send messages in the tests, just behave as if we did
 
