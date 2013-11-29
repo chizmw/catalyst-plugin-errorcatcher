@@ -11,6 +11,10 @@ use Test::More 0.92;
 use File::Spec::Functions;
 use Sys::Hostname;
 
+# hacky, but this stops us actually trying to send emails
+use MIME::Lite;
+*MIME::Lite::send = *MIME::Lite::as_string;
+
 BEGIN {
     $ENV{ TESTAPP_CONFIG } = "$FindBin::Bin/lib/testapp.conf";
 }
