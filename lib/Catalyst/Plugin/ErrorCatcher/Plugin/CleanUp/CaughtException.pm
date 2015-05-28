@@ -2,6 +2,11 @@ package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::CaughtException;
 use strict;
 use warnings;
 
+=head2 tidy_message($self, $stringref)
+
+Tidy up Postgres messages where the error is related to a I<Caught exception>.
+
+=cut
 sub tidy_message {
     my $plugin      = shift;
     my $errstr_ref  = shift;

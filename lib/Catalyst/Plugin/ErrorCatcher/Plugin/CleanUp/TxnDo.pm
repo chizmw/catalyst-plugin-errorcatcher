@@ -2,6 +2,11 @@ package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::TxnDo;
 use strict;
 use warnings;
 
+=head2 tidy_message($self, $stringref)
+
+Tidy up Postgres messages where the error is related to a I<DBIx::Class::Schema::txn_do>.
+
+=cut
 sub tidy_message {
     my $plugin      = shift;
     my $errstr_ref  = shift;

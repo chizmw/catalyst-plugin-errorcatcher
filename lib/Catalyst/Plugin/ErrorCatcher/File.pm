@@ -7,6 +7,11 @@ use DateTime;
 use Path::Class;
 use File::Slurp qw(write_file);
 
+=head2 emit($class, $c, $output)
+
+Emit the error report to a file.
+
+=cut
 sub emit {
     my ($class, $c, $output) = @_;
     my ($config);

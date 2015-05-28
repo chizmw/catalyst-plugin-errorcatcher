@@ -2,6 +2,11 @@ package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::Pg::TransactionAborted;
 use strict;
 use warnings;
 
+=head2 tidy_message($self, $stringref)
+
+Tidy up Postgres messages where the error is related to an I<aborted transaction>.
+
+=cut
 sub tidy_message {
     my $plugin      = shift;
     my $errstr_ref  = shift;

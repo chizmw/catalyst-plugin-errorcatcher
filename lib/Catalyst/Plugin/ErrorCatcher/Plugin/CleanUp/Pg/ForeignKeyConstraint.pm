@@ -2,6 +2,11 @@ package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::Pg::ForeignKeyConstrain
 use strict;
 use warnings;
 
+=head2 tidy_message($self, $stringref)
+
+Tidy up Postgres messages where the error is related to a I<foreign key constraint violation>.
+
+=cut
 sub tidy_message {
     my $plugin      = shift;
     my $errstr_ref  = shift;

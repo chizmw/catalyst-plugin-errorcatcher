@@ -17,6 +17,11 @@ __PACKAGE__->mk_classdata('_errorcatcher_emitter_of');
 __PACKAGE__->meta()->make_immutable();
 no Moose;
 
+=head2 setup($c, $@)
+
+Prepare the plugin for use.
+
+=cut
 sub setup {
     my $c = shift @_;
 
@@ -49,6 +54,11 @@ sub setup {
 }
 
 # implementation borrowed from ABERLIN
+=head2 finalize_error($c)
+
+If configured, and needed, deal with raised errors.
+
+=cut
 sub finalize_error {
     my $c = shift;
     my $conf = $c->_errorcatcher_cfg;
@@ -82,6 +92,12 @@ sub finalize_error {
     return;
 }
 
+=head2 my_finalize_error($c)
+
+This is the method that's called by C<finalize_error> when we do want to use ErrorCatcher
+to format and emit some information.
+
+=cut
 sub my_finalize_error {
     my $c = shift;
     $c->_keep_frames;
@@ -90,6 +106,11 @@ sub my_finalize_error {
     return;
 }
 
+=head2 emitters_init($c)
+
+This routine initialises the emitters enabled in the configuration for the plugin.
+
+=cut
 sub emitters_init {
     my $c = shift;
 
@@ -292,7 +313,12 @@ sub _cleaned_error_message {
     return $error_message;
 }
 
+=head2 append_feedback($stringref, $data)
 
+This is a small utility method that simplifies some of the work needed to
+add some data to a string-reference, including some basic checks and initialisation.
+
+=cut
 sub append_feedback {
     my $fb_ref = shift;
     my $data   = shift;
@@ -300,10 +326,26 @@ sub append_feedback {
     $$fb_ref  .= $data . qq{\n};
 }
 
+=head2 append_feedback_emptyline
+
+Add an empty-line to the string-reference of data being built.
+
+=cut
 sub append_feedback_emptyline {
     append_feedback($_[0], q[]);
 }
 
+=head2 append_feedback_keyvalue($ref, $key, $value, $keypadding)
+
+Add:
+
+    {key}: value
+
+to the feedback data being prepared.
+
+C<$keypadding> is optional. If omitted, defaults to 8.
+
+=cut
 sub append_feedback_keyvalue {
     # don't add undefined values
     return
@@ -316,6 +358,12 @@ sub append_feedback_keyvalue {
     return;
 }
 
+=head2 sanitise_param($value)
+
+Local implementation of L<Data::Dumper/qquote> and general sanity checks and
+transformations of the data in a given piece of data.
+
+=cut
 sub sanitise_param {
     my $value   = shift;
 
@@ -358,6 +406,12 @@ sub sanitise_param {
     );
 }
 
+=head2 append_output_params($ref, $label, $params)
+
+Given a hashref of related items, C<$params>, and a C<$label> for the grouping,
+add sensibly formatted output to the feedback data being constructed.
+
+=cut
 sub append_output_params {
     my $fb_ref = shift;
     my ($label,$params) = @_;

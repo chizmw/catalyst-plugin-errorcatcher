@@ -7,6 +7,11 @@ use MIME::Lite;
 use Path::Class;
 use Sys::Hostname;
 
+=head2 emit($class, $c, $output)
+
+Emit the error report by email.
+
+=cut
 sub emit {
     my ($class, $c, $output) = @_;
     my ($config, $msg);
