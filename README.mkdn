@@ -4,7 +4,7 @@ Catalyst::Plugin::ErrorCatcher - Catch application errors and emit them somewher
 
 # VERSION
 
-version 0.0.8.15
+version 0.0.8.17
 
 # SYNOPSIS
 
@@ -14,7 +14,53 @@ version 0.0.8.15
 
 This plugin allows you to do More Stuff with the information that would
 normally only be seen on the Catalyst Error Screen courtesy of the
-[Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace) plugin.
+[Catalyst::Plugin::StackTrace](https://metacpan.org/pod/Catalyst::Plugin::StackTrace) plugin.
+
+## setup($c, $@)
+
+Prepare the plugin for use.
+
+## finalize\_error($c)
+
+If configured, and needed, deal with raised errors.
+
+## my\_finalize\_error($c)
+
+This is the method that's called by `finalize_error` when we do want to use ErrorCatcher
+to format and emit some information.
+
+## emitters\_init($c)
+
+This routine initialises the emitters enabled in the configuration for the plugin.
+
+## append\_feedback($stringref, $data)
+
+This is a small utility method that simplifies some of the work needed to
+add some data to a string-reference, including some basic checks and initialisation.
+
+## append\_feedback\_emptyline
+
+Add an empty-line to the string-reference of data being built.
+
+## append\_feedback\_keyvalue($ref, $key, $value, $keypadding)
+
+Add:
+
+    {key}: value
+
+to the feedback data being prepared.
+
+`$keypadding` is optional. If omitted, defaults to 8.
+
+## sanitise\_param($value)
+
+Local implementation of ["qquote" in Data::Dumper](https://metacpan.org/pod/Data::Dumper#qquote) and general sanity checks and
+transformations of the data in a given piece of data.
+
+## append\_output\_params($ref, $label, $params)
+
+Given a hashref of related items, `$params`, and a `$label` for the grouping,
+add sensibly formatted output to the feedback data being constructed.
 
 # CONFIGURATION
 
@@ -30,19 +76,19 @@ The plugin is configured in a similar manner to other Catalyst plugins:
         emit_module           A::Module
     </Plugin::ErrorCatcher>
 
-- __enable__
+- **enable**
 
     Setting this to _true_ forces the module to work its voodoo.
 
     It's also enabled if the value is unset and you're running Catalyst in
     debug-mode.
 
-- __context__
+- **context**
 
     When there is stack-trace information to share, how many lines of context to
     show around the line that caused the error.
 
-- __emit\_module__
+- **emit\_module**
 
     This specifies which module to use for custom output behaviour.
 
@@ -56,10 +102,10 @@ The plugin is configured in a similar manner to other Catalyst plugins:
     If none are specified, or all that are specified fail, the default behaviour
     is to log the prepared message at the INFO level via `$c->log()`.
 
-    For details on how to implement a custom emitter see ["CUSTOM EMIT CLASSES"](#CUSTOM EMIT CLASSES)
+    For details on how to implement a custom emitter see ["CUSTOM EMIT CLASSES"](#custom-emit-classes)
     in this documentation.
 
-- __always\_log__
+- **always\_log**
 
     The default plugin behaviour when using one or more emitter modules is to
     suppress the _info_ log message if one or more of them succeeded.
@@ -67,7 +113,7 @@ The plugin is configured in a similar manner to other Catalyst plugins:
     If you wish to log the information, via `$c->log()` then set this value
     to 1.
 
-- __include\_session__
+- **include\_session**
 
     The default behaviour is to suppress potentially sensitive and revealing
     session-data in the error report.
@@ -78,7 +124,7 @@ The plugin is configured in a similar manner to other Catalyst plugins:
     When set to 1 the report will include a `Data::Dump::pp()` representation of
     the request's session. 
 
-- __user\_identified\_by__
+- **user\_identified\_by**
 
     If there's a logged-in user use the specified value as the method to identify
     the user.
@@ -117,10 +163,10 @@ screen whilst still capturing and emitting a report with stack-trace.
 
 ## Catalyst::Plugin::ErrorCatcher::Email
 
-This module uses [MIME::Lite](http://search.cpan.org/perldoc?MIME::Lite) to send the prepared output to a specified
+This module uses [MIME::Lite](https://metacpan.org/pod/MIME::Lite) to send the prepared output to a specified
 email address.
 
-See [Catalyst::Plugin::ErrorCatcher::Email](http://search.cpan.org/perldoc?Catalyst::Plugin::ErrorCatcher::Email) for usage and configuration
+See [Catalyst::Plugin::ErrorCatcher::Email](https://metacpan.org/pod/Catalyst::Plugin::ErrorCatcher::Email) for usage and configuration
 details.
 
 # CUSTOM EMIT CLASSES
@@ -132,20 +178,16 @@ A custom emit class takes the following format:
     use strict;
     use warnings;
     
-
     sub emit {
       my ($class, $c, $output) = @_;
     
-
       $c->log->info(
         'IGNORING OUTPUT FROM Catalyst::Plugin::ErrorCatcher'
       );
     
-
       return;
     }
     
-
     1;
     __END__
 
@@ -154,15 +196,15 @@ The only requirement is that you have a sub called `emit`.
 `Catalyst::Plugin::ErrorCatcher` passes the following parameters in the call
 to `emit()`:
 
-- __$class__
+- **$class**
 
     The package name
 
-- __$c__
+- **$c**
 
-    A [Context](http://search.cpan.org/perldoc?Catalyst::Manual::Intro#Context) object
+    A [Context](https://metacpan.org/pod/Catalyst::Manual::Intro#Context) object
 
-- __$output__
+- **$output**
 
     The processed output from `Catalyst::Plugin::ErrorCatcher`
 
@@ -183,12 +225,12 @@ fit.
 
 # SEE ALSO
 
-[Catalyst](http://search.cpan.org/perldoc?Catalyst),
-[Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace)
+[Catalyst](https://metacpan.org/pod/Catalyst),
+[Catalyst::Plugin::StackTrace](https://metacpan.org/pod/Catalyst::Plugin::StackTrace)
 
 # THANKS
 
-The authors of [Catalyst::Plugin::StackTrace](http://search.cpan.org/perldoc?Catalyst::Plugin::StackTrace), from which a lot of
+The authors of [Catalyst::Plugin::StackTrace](https://metacpan.org/pod/Catalyst::Plugin::StackTrace), from which a lot of
 code was used.
 
 Ash Berlin for guiding me in the right direction after a known hacky first
@@ -204,7 +246,7 @@ Chisel <chisel@chizography.net>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Chisel Wright.
+This software is copyright (c) 2015 by Chisel Wright.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
