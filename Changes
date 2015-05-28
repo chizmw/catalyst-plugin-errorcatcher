@@ -5,6 +5,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
    PR #4 from timbunce; relates to issue #3
  - (author) update dist.ini to use Test::NoTabs
  - (author) add POD to naked subroutines to appease t/release-pod-coverage.t
+ - (author) allow README.mkdn to be 'dirty' at release time
 
 0.0.8.15  2013-11-29 11:12:35 UTC
  - update tests to not actually use MIME::Lite::send
