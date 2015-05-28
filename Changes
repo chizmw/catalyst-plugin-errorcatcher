@@ -2,6 +2,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
  - (author) auto-commit local changes to generated file README.mkdn
+ - (author) reintroduce Git::Tag plugin behaviour
 
 0.0.8.16  2015-05-28 11:44:21+00:00 UTC
  - Disable the tests that are failing with recent versions of Catalyst
