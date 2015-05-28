@@ -1,6 +1,10 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+ - (author) auto-commit local changes to updated Changes file
+   Changes file is modified as part of the dzil release process
+
+0.0.8.17  2015-05-28 11:54:52+00:00 UTC
  - (author) auto-commit local changes to generated file README.mkdn
  - (author) reintroduce Git::Tag plugin behaviour
 
