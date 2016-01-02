@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Email;
+
 # ABSTRACT: an email emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;

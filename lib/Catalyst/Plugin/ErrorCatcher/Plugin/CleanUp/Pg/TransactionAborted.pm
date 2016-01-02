@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::Pg::TransactionAborted;
+
 use strict;
 use warnings;
 

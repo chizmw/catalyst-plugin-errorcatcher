@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::CaughtException;
+
 use strict;
 use warnings;
 

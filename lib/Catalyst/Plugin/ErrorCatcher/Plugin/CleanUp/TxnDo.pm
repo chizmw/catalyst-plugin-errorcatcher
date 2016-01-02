@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::TxnDo;
+
 use strict;
 use warnings;
 

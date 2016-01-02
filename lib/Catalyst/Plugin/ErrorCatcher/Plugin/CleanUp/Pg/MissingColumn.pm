@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::Plugin::CleanUp::Pg::MissingColumn;
+
 use strict;
 use warnings;
 
