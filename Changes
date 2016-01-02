@@ -5,6 +5,7 @@ This file documents the revision history for Catalyst::Plugin::ErrorCatcher
  - Generate missing META.json file using dzil plugin [MetaJSON].
  - fix 'no blank line' warning during dzil build
  - Use dzil plugin to auto-generate list of contributors
+ - Use .mailmap to consolidate authors in commit history
 
 0.0.8.18  2015-05-28 12:00:58+00:00 UTC
  - (author) auto-commit local changes to updated Changes file
