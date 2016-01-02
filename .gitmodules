@@ -1,0 +1,3 @@
+[submodule "script/buildkite"]
+	path = script/buildkite
+	url = git@github.com:chiselwright/buildkite-helpers.git
