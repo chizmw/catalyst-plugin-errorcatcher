@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher::File;
+
 # ABSTRACT: a file emitter for Catalyst::Plugin::ErrorCatcher
 use strict;
 use warnings;

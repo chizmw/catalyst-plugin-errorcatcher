@@ -1,4 +1,5 @@
 package Catalyst::Plugin::ErrorCatcher;
+
 # ABSTRACT: Catch application errors and emit them somewhere
 use Moose;
     with 'Catalyst::ClassData';
