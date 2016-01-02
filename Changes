@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.19  2016-01-02 13:02:51+00:00 UTC
  - Generating module list to the META file using dzil plugin [MetaProvides::Package].
  - Generate missing META.json file using dzil plugin [MetaJSON].
  - fix 'no blank line' warning during dzil build
