@@ -1,6 +1,9 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+ - remove [PkgDist]
+   based on useful feedback from @karenetheridge in this comment:
+     https://github.com/rjbs/Dist-Zilla/pull/510#issuecomment-169426681
 
 0.0.8.20  2016-01-06 10:29:10+00:00 UTC
  - Generating module list to the META file using dzil plugin [MetaProvides::Package].
