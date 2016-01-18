@@ -1,6 +1,8 @@
 This file documents the revision history for Catalyst::Plugin::ErrorCatcher
 
 {{$NEXT}}
+
+0.0.8.21  2016-01-18 15:18:07+00:00 UTC
  - remove [PkgDist]
    based on useful feedback from @karenetheridge in this comment:
      https://github.com/rjbs/Dist-Zilla/pull/510#issuecomment-169426681
