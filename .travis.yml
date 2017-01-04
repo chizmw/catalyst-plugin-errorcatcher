@@ -9,6 +9,7 @@ before_install:
 - source perl-travis-helper/init
 - build-perl
 - perl -V
+- cpan-install Dist::Zilla~6.008
 - perl -MDist::Zilla -le "print Dist::Zilla->VERSION;";
 - build-dist
 - cd $BUILD_DIR
