@@ -1,0 +1,10 @@
+language: perl
+perl:
+  - "5.22"
+  - "5.20"
+  - "5.18"
+
+
+before_install:
+  - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
+  - source ~/travis-perl-helpers/init --auto
