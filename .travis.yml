@@ -28,5 +28,6 @@ notifications:
   slack:
     secure: LIdsJ5CeootyvhgRXZCWzTCkxf1X0A482bzSCfUmwcymldqKhlrcd1x3wRlYm4MeUMZIY34KhmxCN0JsllWPUo+piOhXVjazNcCVAE1wnRl2nLDycxulXU8h2IEXHK6b1e4WO1ZauLnJ09MTlnA7vymjhAb3WeQQouHwfqXPJ2hWfVKBxBG+E7otQrdOtaWkLBuHVlxOwEX66rDSvikD/4MjRHMHFGRwmJXOza8SVsiAwByUeXYPny++CM0xBL/Cso+XmUY6OOEyS9BpmBHyB1A7XTT32OuCMB3t4pJZw8OVvt/PA0pq795HvADMK4uwji9H7Q92rJLr+KvPaoU+hN8/7c8Ld4XsNiCjve8SLx1K+/sOYkwDEQLHxRpKSQ5VuN0ZPJmx+BBa+z+8Nd21ptEbXOMLszn85Xf9vRYDQYqlU2ugPxecpZhH1SDKwGMK1aumYAQISX47YXArkrz1CCM2G80kkiV5lXyJ9ObIMiz6PdbxD/dsu6sgMDdBcL9VzOh2uOJqpd75Sy0mRH1TOYBlQHq1vbbIUu08UB/vw9iiBkFv+SXpmIkZAzl7wjgMTNJnSgWLZkYECXfk7yfGG6b86M7JmBam144trXph6VyfxxxRILKoFS3le62mhawIIiyDTRehg3atkT6UqcUKIyTFnPeaMPZHnD3Kciv6bfs=
 env:
-- GIT_AUTHOR_NAME="Travis CI"
-- GIT_AUTHOR_EMAIL="travis.ci@chizography.net"
+  global:
+  - GIT_AUTHOR_NAME="Travis CI"
+  - GIT_AUTHOR_EMAIL="travis.ci@chizography.net"
