@@ -1,26 +1,27 @@
 language: perl
 perl:
-  - "blead"
-  - "5.22"
-  - "5.20"
-  - "5.18"
-
+- blead
+- '5.22'
+- '5.20'
+- '5.18'
 before_install:
-  - git clone git://github.com/haarg/perl-travis-helper
-  - source perl-travis-helper/init
-  - build-perl
-  - perl -V
-  - build-dist
-  - cd $BUILD_DIR
-
+- git clone git://github.com/haarg/perl-travis-helper
+- source perl-travis-helper/init
+- build-perl
+- perl -V
+- build-dist
+- cd $BUILD_DIR
 install:
-  - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=c HARNESS_TIMER=1
-  - cpanm --quiet --notest Devel::Cover::Report::Coveralls
-  - cpanm --quiet --notest --installdeps .
-
+- export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=c
+  HARNESS_TIMER=1
+- cpanm --quiet --notest Devel::Cover::Report::Coveralls
+- cpanm --quiet --notest --installdeps .
 script:
-  - PERL5OPT=-MDevel::Cover=-coverage,statement,branch,condition,path,subroutine prove -lrsv t
-  - cover
-
+- PERL5OPT=-MDevel::Cover=-coverage,statement,branch,condition,path,subroutine prove
+  -lrsv t
+- cover
 after_success:
-  - cover -report coveralls
+- cover -report coveralls
+notifications:
+  slack:
+    secure: LIdsJ5CeootyvhgRXZCWzTCkxf1X0A482bzSCfUmwcymldqKhlrcd1x3wRlYm4MeUMZIY34KhmxCN0JsllWPUo+piOhXVjazNcCVAE1wnRl2nLDycxulXU8h2IEXHK6b1e4WO1ZauLnJ09MTlnA7vymjhAb3WeQQouHwfqXPJ2hWfVKBxBG+E7otQrdOtaWkLBuHVlxOwEX66rDSvikD/4MjRHMHFGRwmJXOza8SVsiAwByUeXYPny++CM0xBL/Cso+XmUY6OOEyS9BpmBHyB1A7XTT32OuCMB3t4pJZw8OVvt/PA0pq795HvADMK4uwji9H7Q92rJLr+KvPaoU+hN8/7c8Ld4XsNiCjve8SLx1K+/sOYkwDEQLHxRpKSQ5VuN0ZPJmx+BBa+z+8Nd21ptEbXOMLszn85Xf9vRYDQYqlU2ugPxecpZhH1SDKwGMK1aumYAQISX47YXArkrz1CCM2G80kkiV5lXyJ9ObIMiz6PdbxD/dsu6sgMDdBcL9VzOh2uOJqpd75Sy0mRH1TOYBlQHq1vbbIUu08UB/vw9iiBkFv+SXpmIkZAzl7wjgMTNJnSgWLZkYECXfk7yfGG6b86M7JmBam144trXph6VyfxxxRILKoFS3le62mhawIIiyDTRehg3atkT6UqcUKIyTFnPeaMPZHnD3Kciv6bfs=
